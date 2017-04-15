@@ -1,0 +1,247 @@
+<!doctype html>
+<meta charset="UTF-8" />
+<title>Fretboard template generator</title>
+
+<script src="https://unpkg.com/react@^15.5.4/dist/react.min.js"></script>
+<script src="https://unpkg.com/react-dom@^15.5.4/dist/react-dom.min.js"></script>
+<script src="https://unpkg.com/babel-standalone@^6.23.0/babel.min.js"></script>
+
+<style>
+  html {
+    background: white;
+    color: black;
+    font: 12px "Helvetica Neue", "Arial", sans-serif;
+    margin: 0;
+  }
+
+  body {
+    margin: 0;
+  }
+
+  @media screen {
+    .app-container {
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+    }
+
+    .app-header {
+      background: gray;
+      box-shadow: 0 -1px 2px rgba(0, 0, 0, 0.3) inset;
+      color: white;
+      padding: 1em;
+      text-align: center;
+      text-shadow: 0 1px 1px rgba(0, 0, 0, 0.3);
+    }
+
+    .app-footer {
+      background: rgba(0, 0, 0, 0.1);
+      padding: 1em;
+      text-align: center;
+    }
+
+    .layout-container {
+      background: rgba(0, 0, 0, 0.05);
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
+      overflow: auto;
+    }
+
+    .page-outline {
+      background: white;
+      box-shadow: 1px 2px 3px rgba(0, 0, 0, 0.5);
+      border: 1px solid gray;
+      margin: 2em auto;
+    }
+  }
+
+  @media print {
+    @page {
+      margin: 0;
+    }
+
+    .app-header,
+    .app-footer {
+      display: none;
+    }
+
+    .layout {
+      margin-bottom: 0 !important;
+      margin-right: 0 !important;
+    }
+  }
+</style>
+
+<script type="text/babel">
+  if (location.search.indexOf('reset-state') !== -1) {
+    localStorage.removeItem('state');
+    location.replace(location.href.split('?')[0]);
+  }
+
+  const container = document.createElement('div');
+  document.body.appendChild(container);
+
+  const defaultState = {
+    pageWidth: 8+1/2,
+    pageHeight: 11,
+    margin: 5/8,
+    scaleLength: 25+1/2,
+    frets: 24,
+    tones: 12
+  };
+
+  const storedState = JSON.parse(localStorage.getItem('state'));
+
+  const state = Object.assign({}, defaultState, storedState);
+
+  function handleChange(event) {
+    state[event.currentTarget.name] = event.currentTarget.value;
+    render();
+    localStorage.setItem('state', JSON.stringify(state));
+  }
+
+  function getFretPosition(fret, length, tones) {
+    return length - length / (2 ** (fret / tones));
+  }
+
+  function getColumnsCount(layoutHeight, insideHeight, overlap, _previous = 1) {
+    let result = Math.ceil((layoutHeight + overlap * (_previous - 1)) / insideHeight);
+    if (result === _previous) {
+      return result;
+    } else {
+      return getColumnsCount(layoutHeight, insideHeight, overlap, result);
+    }
+  }
+
+  const svgPrefix = '<?xml version="1.0" encoding="UTF-8"?>\n';
+
+  function handleSaveButtonClick(event) {
+    const svg = document.querySelector(event.currentTarget.dataset.target);
+    const blob = new Blob([svgPrefix, svg.outerHTML], {type: 'image/svg+xml;charset=utf-8'});
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = event.currentTarget.dataset.filename;
+    link.style.display = 'none';
+    document.body.appendChild(link);
+    link.click();
+    link.parentNode.removeChild(link);
+  }
+
+  function render() {
+    const unit = 'in';
+
+    const pageWidth = parseFloat(state.pageWidth);
+    const pageHeight = parseFloat(state.pageHeight);
+    const margin = parseFloat(state.margin);
+    const scaleLength = parseFloat(state.scaleLength);
+    const frets = parseFloat(state.frets);
+    const tones = parseFloat(state.tones);
+
+    const insideWidth = pageWidth - margin * 2;
+    const insideHeight = pageHeight - margin * 2;
+
+    const lastFretPosition = getFretPosition(frets, scaleLength, tones);
+    const overlap = 1/3;
+    const layoutHeight = lastFretPosition + overlap * 2;
+
+    const columnsCount = getColumnsCount(layoutHeight, insideHeight, overlap);
+    const columnWidth = insideWidth / columnsCount;
+
+    const filename = `fretboard_${scaleLength}_${frets}_${pageWidth}x${pageHeight}-${margin}.svg`;
+
+    ReactDOM.render((
+      <div className="app-container" style={{minWidth: `${insideWidth}in`}}>
+        <header className="app-header">
+          <div>
+            <label>
+              Scale length{' '}
+              <input type="number" name="scaleLength" defaultValue={scaleLength} min="1" max="52" onChange={handleChange} style={{width: '5ch'}} />
+            </label>
+            &emsp;&emsp;
+            <label>
+              Frets{' '}
+              <input type="number" name="frets" defaultValue={frets} min="1" max="48" step="1" onChange={handleChange} style={{width: '5ch'}} />
+            </label>
+            &emsp;&emsp;
+            <label>
+              Page{' '}
+              <input type="number" name="pageWidth" defaultValue={pageWidth} min="1" max="36" step="0.125" onChange={handleChange} style={{width: '5ch'}} />{' '}
+            </label>
+            <label>
+              &times;{' '}
+              <input type="number" name="pageHeight" defaultValue={pageHeight} min="1" max="36" step="0.125" onChange={handleChange} style={{width: '5ch'}} />
+            </label>
+            &emsp;&emsp;
+            <label>
+              Margin{' '}
+              <input type="number" name="margin" defaultValue={margin} min="0" max="12" step="0.125" onChange={handleChange} style={{width: '5ch'}} />
+            </label>
+            &emsp;&emsp;
+            <button type="button" onClick={handleSaveButtonClick} data-target=".layout" data-filename={filename} title={filename}>Save</button>{' '}
+            <button type="button" onClick={print}>Print</button>
+          </div>
+        </header>
+
+        <div className="layout-container">
+          <div className="page-outline">
+            <svg className="layout" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" width={insideWidth + unit} height={insideHeight + unit} style={{margin: margin + unit}}>
+              <rect x={insideWidth - 1 - 1/32 + 'in'} y={insideHeight - 1 - 1/32 + 'in'} width="1in" height="1in" fill="none" stroke="gray" strokeWidth="0.5pt" />
+
+              <symbol id="fretboard"  width={columnWidth + unit} height={layoutHeight}>
+                <g fill="none" stroke="black" strokeWidth="0.5pt" strokeDasharray="0" fontFamily="Helvetica Neue, sans-serif" fontSize="10px" textAnchor="middle">
+                  <line x1={columnWidth / 2 + unit} y1={0} x2={columnWidth / 2 + unit} y2={layoutHeight + unit} stroke="gray" />
+                  {Array(frets + 1).fill(null).map((_, fret) => {
+                    const y = overlap + getFretPosition(fret, scaleLength, tones);
+                    return (
+                      <g key={fret}>
+                        <text x={columnWidth / 2 + unit} y={(y - 1/32) + unit} fill="black" stroke="none">{fret === 0 ? `${scaleLength}" scale` : fret}</text>
+                        <line x1={0} y1={y + unit} x2={columnWidth + unit} y2={y + unit} strokeDasharray={fret === 0 ? '3pt' : null} />
+                      </g>
+                    );
+                  })}
+                </g>
+              </symbol>
+
+              <symbol id="registration-mark" overflow="visible">
+                <g fill="none" stroke="black" strokeWidth="1pt" strokeDasharray="0">
+                  <circle cx={`${overlap / 2}in`} cy={`${overlap / 2}in`} r={`${overlap/3}in`} />
+                  <line x1="0" y1="0" x2={`${overlap}in`} y2={`${overlap}in`} />
+                  <line x1="0" y1={`${overlap}in`} x2={`${overlap}in`} y2="0" />
+                </g>
+              </symbol>
+
+              <g fill="none" stroke="gray" strokeWidth="0.5pt" strokeDasharray="3pt">
+                <rect width={insideWidth + unit} height={insideHeight + unit} />
+                {Array(columnsCount).fill(null).map((_, c) => {
+                  const x = columnWidth * c;
+                  return <g key={c}>
+                    <svg xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" x={x + unit} y={0} width={columnWidth + unit} height={insideHeight + unit}>
+                      <g style={{display: c === 0 ? 'none' : ''}}>
+                        <use xlinkHref="#registration-mark" x="0" y="0" />
+                        <use xlinkHref="#registration-mark" x={columnWidth - overlap + unit} y="0" />
+                      </g>
+                      <use xlinkHref="#fretboard" x={0} y={(insideHeight - overlap) * -1 * c + unit} width={columnWidth + unit} height={layoutHeight + unit} />
+                      <g style={{display: c === columnsCount - 1 ? 'none' : ''}}>
+                        <use xlinkHref="#registration-mark" x="0" y={insideHeight - overlap + unit} />
+                        <use xlinkHref="#registration-mark" x={columnWidth - overlap + unit} y={insideHeight - overlap + unit} />
+                      </g>
+                    </svg>
+                    {c === 0 ? null : <line x1={x + unit} y1={0} x2={x + unit} y2={insideHeight + unit} />}
+                  </g>
+                })}
+              </g>
+            </svg>
+          </div>
+
+          <footer className="app-footer">
+            This might not print exactly right with your browser/printer without tweaking some settings. Experiment!
+          </footer>
+        </div>
+      </div>
+    ), container);
+  }
+
+  render();
+</script>
