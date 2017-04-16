@@ -18,11 +18,11 @@
     margin: 0;
   }
 
-  a {
-    color: orangered;
-  }
-
   @media screen {
+    a {
+      color: orangered;
+    }
+
     .app-container {
       display: flex;
       flex-direction: column;
@@ -36,6 +36,10 @@
       padding: 1em;
       text-align: center;
       text-shadow: 0 1px 1px rgba(0, 0, 0, 0.3);
+    }
+
+    .control-container {
+      white-space: nowrap;
     }
 
     .app-footer {
@@ -91,6 +95,9 @@
     pageHeight: 11,
     margin: 5/8,
     scaleLength: 25+1/2,
+    multiscale: true,
+    otherScaleLength: 24,
+    perpendicularAt: 0.5,
     frets: 24,
     tones: 12
   };
@@ -100,7 +107,13 @@
   const state = Object.assign({}, defaultState, storedState);
 
   function handleChange(event) {
-    state[event.currentTarget.name] = event.currentTarget.value;
+    switch (event.currentTarget.type) {
+      case 'checkbox':
+        state[event.currentTarget.name] = event.currentTarget.checked;
+        break;
+      default:
+        state[event.currentTarget.name] = event.currentTarget.value;
+    }
     render();
     localStorage.setItem('state', JSON.stringify(state));
   }
@@ -140,47 +153,74 @@
     const pageHeight = parseFloat(state.pageHeight);
     const margin = parseFloat(state.margin);
     const scaleLength = parseFloat(state.scaleLength);
+    const multiscale = state.multiscale;
+    const otherScaleLength = multiscale ? parseFloat(state.otherScaleLength) : scaleLength;
+    const perpendicularAt = parseFloat(state.perpendicularAt);
     const frets = parseFloat(state.frets);
     const tones = parseFloat(state.tones);
 
     const insideWidth = pageWidth - margin * 2;
     const insideHeight = pageHeight - margin * 2;
 
-    const lastFretPosition = getFretPosition(frets, scaleLength, tones);
+    const longerScale = Math.max(scaleLength, otherScaleLength);
+    const scaleDifference = scaleLength - otherScaleLength;
+    const lastFretPosition = getFretPosition(frets, longerScale, tones);
     const overlap = 1/3;
     const layoutHeight = lastFretPosition + overlap * 2;
 
     const columnsCount = getColumnsCount(layoutHeight, insideHeight, overlap);
     const columnWidth = insideWidth / columnsCount;
 
+    const scaleDescription = multiscale ? `${scaleLength}-${otherScaleLength}" scales` : `${scaleLength}" scale`;
     const filename = `fretboard_${scaleLength}_${frets}_${pageWidth}x${pageHeight}-${margin}.svg`;
 
     ReactDOM.render((
       <div className="app-container" style={{minWidth: `${insideWidth}in`}}>
         <header className="app-header">
           <div>
-            <label>
-              Scale length{' '}
-              <input type="number" name="scaleLength" defaultValue={scaleLength} min="1" max="52" step={1/8} onChange={handleChange} style={{width: '5ch'}} />
+            <label className="control-container">
+              <input type="checkbox" name="multiscale" defaultChecked={multiscale} onChange={handleChange} />{' '}
+              Multiscale
             </label>
             &emsp;&emsp;
-            <label>
+            <span style={{display: 'inline-block', verticalAlign: 'top'}}>
+              <label className="control-container">
+                Scale length{' '}
+                <input type="number" name="scaleLength" defaultValue={scaleLength} min="1" max="52" step={1/8} onChange={handleChange} style={{width: '8ch'}} />
+              </label>
+              {multiscale
+                ? <span>
+                  <br />
+                  <label className="control-container">
+                    Other scale length{' '}
+                    <input type="number" name="otherScaleLength" defaultValue={otherScaleLength} min="1" max="52" step={1/8} onChange={handleChange} style={{width: '8ch'}} />
+                  </label>
+                  <br />
+                  <label className="control-container">
+                    Perpendicular at{' '}
+                    <input type="number" name="perpendicularAt" defaultValue={perpendicularAt} min="0" max="1" step={1/10} onChange={handleChange} style={{width: '8ch'}} />
+                  </label>
+                </span>
+                : null}
+            </span>
+            &emsp;&emsp;
+            <label className="control-container">
               Frets{' '}
-              <input type="number" name="frets" defaultValue={frets} min="1" max="48" step="1" onChange={handleChange} style={{width: '5ch'}} />
+              <input type="number" name="frets" defaultValue={frets} min="1" max="48" step="1" onChange={handleChange} style={{width: '8ch'}} />
             </label>
             &emsp;&emsp;
-            <label>
+            <label className="control-container">
               Page{' '}
-              <input type="number" name="pageWidth" defaultValue={pageWidth} min="1" max="36" step={1/8} onChange={handleChange} style={{width: '5ch'}} />{' '}
+              <input type="number" name="pageWidth" defaultValue={pageWidth} min="1" max="36" step={1/8} onChange={handleChange} style={{width: '8ch'}} />{' '}
             </label>
-            <label>
+            <label className="control-container">
               &times;{' '}
-              <input type="number" name="pageHeight" defaultValue={pageHeight} min="1" max="36" step={1/8} onChange={handleChange} style={{width: '5ch'}} />
+              <input type="number" name="pageHeight" defaultValue={pageHeight} min="1" max="36" step={1/8} onChange={handleChange} style={{width: '8ch'}} />
             </label>
             &emsp;&emsp;
-            <label>
+            <label className="control-container">
               Margin{' '}
-              <input type="number" name="margin" defaultValue={margin} min="0" max="12" step={1/8} onChange={handleChange} style={{width: '5ch'}} />
+              <input type="number" name="margin" defaultValue={margin} min="0" max="12" step={1/8} onChange={handleChange} style={{width: '8ch'}} />
             </label>
             &emsp;&emsp;
             <button type="button" onClick={handleSaveButtonClick} data-target=".layout" data-filename={filename} title={filename}>Save</button>{' '}
@@ -198,11 +238,19 @@
                 <g fill="none" stroke="black" strokeWidth="0.5pt" strokeDasharray="0" fontFamily="Helvetica Neue, sans-serif" fontSize="10px" textAnchor="middle">
                   <line x1={columnWidth / 2 + unit} y1={0} x2={columnWidth / 2 + unit} y2={layoutHeight + unit} stroke="gray" />
                   {Array(frets + 1).fill(null).map((_, fret) => {
-                    const y = overlap + getFretPosition(fret, scaleLength, tones);
+                    let y1 = overlap + getFretPosition(fret, scaleLength, tones);
+                    let y2 = overlap + getFretPosition(fret, otherScaleLength, tones);
+                    const makePerpendicular = Math.abs(scaleDifference) * perpendicularAt;
+                    if (scaleDifference < 0) {
+                      y1 += makePerpendicular;
+                    } else {
+                      y2 += makePerpendicular;
+                    }
+                    const yMiddle = (y1 + y2) / 2;
                     return (
                       <g key={fret}>
-                        <text x={columnWidth / 2 + unit} y={(y - 1/32) + unit} fill="black" stroke="none">{fret === 0 ? `${scaleLength}" scale` : fret}</text>
-                        <line x1={0} y1={y + unit} x2={columnWidth + unit} y2={y + unit} strokeDasharray={fret === 0 ? '3pt' : null} />
+                        <text x={columnWidth / 2 + unit} y={(yMiddle - 1/32) + unit} fill="black" stroke="none">{fret === 0 ? scaleDescription : fret}</text>
+                        <line x1={0} y1={y1 + unit} x2={columnWidth + unit} y2={y2 + unit} strokeDasharray={fret === 0 ? '3pt' : null} />
                       </g>
                     );
                   })}
