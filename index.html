@@ -4,7 +4,7 @@
 
 <script src="https://unpkg.com/react@^15.5.4/dist/react.min.js"></script>
 <script src="https://unpkg.com/react-dom@^15.5.4/dist/react-dom.min.js"></script>
-<script src="https://unpkg.com/babel-standalone@^6.23.0/babel.min.js"></script>
+<script src="https://unpkg.com/babel-standalone@^6.23.0/babel.min.js"></script><!--Sorry!-->
 
 <style>
   html {
@@ -134,7 +134,7 @@
   }
 
   function render() {
-    const unit = 'in';
+    const unit = 'in'; // TODO: Clean this all up.
 
     const pageWidth = parseFloat(state.pageWidth);
     const pageHeight = parseFloat(state.pageHeight);
@@ -192,6 +192,7 @@
           <div className="page-outline">
             <svg className="layout" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" width={insideWidth + unit} height={insideHeight + unit} style={{margin: margin + unit}}>
               <rect x={insideWidth - 1 - 1/32 + 'in'} y={insideHeight - 1 - 1/32 + 'in'} width="1in" height="1in" fill="none" stroke="gray" strokeWidth="0.5pt" />
+              <text x={insideWidth - 1/2 - 1/32 + 'in'} y={insideHeight - 1/2 + 1/32 + 'in'} fontFamily="Helvetica Neue, sans-serif" fontSize="10px" textAnchor="middle">This square is 1&quot;.</text>
 
               <symbol id="fretboard"  width={columnWidth + unit} height={layoutHeight}>
                 <g fill="none" stroke="black" strokeWidth="0.5pt" strokeDasharray="0" fontFamily="Helvetica Neue, sans-serif" fontSize="10px" textAnchor="middle">
