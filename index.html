@@ -18,6 +18,10 @@
     margin: 0;
   }
 
+  a {
+    color: orangered;
+  }
+
   @media screen {
     .app-container {
       display: flex;
@@ -157,7 +161,7 @@
           <div>
             <label>
               Scale length{' '}
-              <input type="number" name="scaleLength" defaultValue={scaleLength} min="1" max="52" onChange={handleChange} style={{width: '5ch'}} />
+              <input type="number" name="scaleLength" defaultValue={scaleLength} min="1" max="52" step={1/8} onChange={handleChange} style={{width: '5ch'}} />
             </label>
             &emsp;&emsp;
             <label>
@@ -167,16 +171,16 @@
             &emsp;&emsp;
             <label>
               Page{' '}
-              <input type="number" name="pageWidth" defaultValue={pageWidth} min="1" max="36" step="0.125" onChange={handleChange} style={{width: '5ch'}} />{' '}
+              <input type="number" name="pageWidth" defaultValue={pageWidth} min="1" max="36" step={1/8} onChange={handleChange} style={{width: '5ch'}} />{' '}
             </label>
             <label>
               &times;{' '}
-              <input type="number" name="pageHeight" defaultValue={pageHeight} min="1" max="36" step="0.125" onChange={handleChange} style={{width: '5ch'}} />
+              <input type="number" name="pageHeight" defaultValue={pageHeight} min="1" max="36" step={1/8} onChange={handleChange} style={{width: '5ch'}} />
             </label>
             &emsp;&emsp;
             <label>
               Margin{' '}
-              <input type="number" name="margin" defaultValue={margin} min="0" max="12" step="0.125" onChange={handleChange} style={{width: '5ch'}} />
+              <input type="number" name="margin" defaultValue={margin} min="0" max="12" step={1/8} onChange={handleChange} style={{width: '5ch'}} />
             </label>
             &emsp;&emsp;
             <button type="button" onClick={handleSaveButtonClick} data-target=".layout" data-filename={filename} title={filename}>Save</button>{' '}
@@ -236,7 +240,9 @@
           </div>
 
           <footer className="app-footer">
-            This might not print exactly right with your browser/printer without tweaking some settings. Experiment!
+            Note: This might not print at exactly the right scale with your browser and/or printer without manually tweaking some settings. Experiment!
+            <br />
+            <a href="https://github.com/brian-c/fretboard-template-generator">Source on GitHub.</a>{' '}
           </footer>
         </div>
       </div>
