@@ -1,5 +1,5 @@
 <!doctype html>
-<meta charset="UTF-8" />
+<meta charset="utf-8" />
 <title>Fretboard template generator</title>
 
 <script src="https://unpkg.com/react@^15.5.4/dist/react.min.js"></script>
@@ -23,44 +23,50 @@
       color: orangered;
     }
 
-    .app-container {
+    hr {
+      border: 1px solid;
+      border-width: 1px 0 0 0;
+      opacity: 0.5;
+    }
+
+    .app-layout {
       display: flex;
-      flex-direction: column;
       height: 100vh;
     }
 
-    .app-header {
+    .settings-container {
       background: gray;
-      box-shadow: 0 -1px 2px rgba(0, 0, 0, 0.3) inset;
       color: white;
       padding: 1em;
-      text-align: center;
       text-shadow: 0 1px 1px rgba(0, 0, 0, 0.3);
     }
 
-    .control-container {
-      white-space: nowrap;
+    .output-container {
+      background: rgba(0, 0, 0, 0.05);
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
+      overflow-y: auto;
+    }
+
+    .paper-container {
+      display: flex;
+      flex-grow: 1;
+      flex-shrink: 0;
+      overflow-x: auto;
+      padding: 3vh 3vw;
+    }
+
+    .paper-surface {
+      background: white;
+      border: 1px solid gray;
+      margin: auto;
     }
 
     .app-footer {
       background: rgba(0, 0, 0, 0.1);
       padding: 1em;
       text-align: center;
-    }
-
-    .layout-container {
-      background: rgba(0, 0, 0, 0.05);
-      display: flex;
-      flex-direction: column;
-      flex-grow: 1;
-      overflow: auto;
-    }
-
-    .page-outline {
-      background: white;
-      box-shadow: 1px 2px 3px rgba(0, 0, 0, 0.5);
-      border: 1px solid gray;
-      margin: 2em auto;
     }
   }
 
@@ -69,12 +75,13 @@
       margin: 0;
     }
 
-    .app-header,
+    .settings-container,
     .app-footer {
       display: none;
     }
 
-    .layout {
+    .paper-content {
+      /* Kill the inline margin to prevent printing a blank page. */
       margin-bottom: 0 !important;
       margin-right: 0 !important;
     }
@@ -102,9 +109,9 @@
     tones: 12
   };
 
-  const storedState = JSON.parse(localStorage.getItem('state'));
+  const savedState = JSON.parse(localStorage.getItem('state'));
 
-  const state = Object.assign({}, defaultState, storedState);
+  const state = Object.assign({}, defaultState, savedState);
 
   function handleChange(event) {
     switch (event.currentTarget.type) {
@@ -114,6 +121,7 @@
       default:
         state[event.currentTarget.name] = event.currentTarget.value;
     }
+
     render();
     localStorage.setItem('state', JSON.stringify(state));
   }
@@ -172,126 +180,160 @@
     const columnWidth = insideWidth / columnsCount;
 
     const scaleDescription = multiscale ? `${scaleLength}-${otherScaleLength}" scales` : `${scaleLength}" scale`;
-    const filename = `fretboard_${scaleLength}_${frets}_${pageWidth}x${pageHeight}-${margin}.svg`;
+    const filename = `${frets}-frets-on-${scaleLength + (multiscale ? `+${otherScaleLength}` : '')}-scale-at-${pageWidth}x${pageHeight}.svg`;
 
     ReactDOM.render((
-      <div className="app-container" style={{minWidth: `${insideWidth}in`}}>
-        <header className="app-header">
-          <div>
-            <label className="control-container">
-              <input type="checkbox" name="multiscale" defaultChecked={multiscale} onChange={handleChange} />{' '}
-              Multiscale
-            </label>
-            &emsp;&emsp;
-            <span style={{display: 'inline-block', verticalAlign: 'top'}}>
-              <label className="control-container">
-                Scale length{' '}
-                <input type="number" name="scaleLength" defaultValue={scaleLength} min="1" max="52" step={1/8} onChange={handleChange} style={{width: '8ch'}} />
-              </label>
-              {multiscale
-                ? <span>
-                  <br />
-                  <label className="control-container">
-                    Other scale length{' '}
-                    <input type="number" name="otherScaleLength" defaultValue={otherScaleLength} min="1" max="52" step={1/8} onChange={handleChange} style={{width: '8ch'}} />
-                  </label>
-                  <br />
-                  <label className="control-container">
-                    Perpendicular at{' '}
-                    <input type="number" name="perpendicularAt" defaultValue={perpendicularAt} min="0" max="1" step={1/10} onChange={handleChange} style={{width: '8ch'}} />
-                  </label>
-                </span>
-                : null}
-            </span>
-            &emsp;&emsp;
-            <label className="control-container">
-              Frets{' '}
-              <input type="number" name="frets" defaultValue={frets} min="1" max="48" step="1" onChange={handleChange} style={{width: '8ch'}} />
-            </label>
-            &emsp;&emsp;
-            <label className="control-container">
-              Page{' '}
-              <input type="number" name="pageWidth" defaultValue={pageWidth} min="1" max="36" step={1/8} onChange={handleChange} style={{width: '8ch'}} />{' '}
-            </label>
-            <label className="control-container">
-              &times;{' '}
-              <input type="number" name="pageHeight" defaultValue={pageHeight} min="1" max="36" step={1/8} onChange={handleChange} style={{width: '8ch'}} />
-            </label>
-            &emsp;&emsp;
-            <label className="control-container">
-              Margin{' '}
-              <input type="number" name="margin" defaultValue={margin} min="0" max="12" step={1/8} onChange={handleChange} style={{width: '8ch'}} />
-            </label>
-            &emsp;&emsp;
-            <button type="button" onClick={handleSaveButtonClick} data-target=".layout" data-filename={filename} title={filename}>Save</button>{' '}
+      <div className="app-layout" style={{minWidth: `${insideWidth}in`}}>
+        <div className="settings-container">
+          <header style={{textAlign: 'center'}}>
+            <strong>Fretboard template generator</strong>
+          </header>
+          <hr />
+          <table style={{width: '100%'}}>
+            <tbody>
+              <tr>
+                <td style={{textAlign: 'right'}}>Scale length</td>
+                <td>
+                  <input type="number" name="scaleLength" value={scaleLength} onChange={handleChange} style={{width: '7ch'}} />
+                </td>
+              </tr>
+              <tr>
+                <td style={{textAlign: 'right'}}>
+                  <input type="checkbox" id="multiscale-checkbox" name="multiscale" checked={multiscale} onChange={handleChange} />
+                </td>
+                <td>
+                  <label htmlFor="multiscale-checkbox">Multiscale</label>
+                </td>
+              </tr>
+            </tbody>
+            {multiscale && <tbody>
+              <tr>
+                <td style={{textAlign: 'right'}}>Second scale</td>
+                <td>
+                  <input type="number" name="otherScaleLength" value={otherScaleLength} onChange={handleChange} style={{width: '7ch'}} />
+                </td>
+              </tr>
+              <tr>
+                <td style={{textAlign: 'right'}}>&perp; at</td>
+                <td>
+                  <input type="number" name="perpendicularAt" value={perpendicularAt} onChange={handleChange} style={{width: '7ch'}} />
+                </td>
+              </tr>
+            </tbody>}
+            <tbody>
+              <tr>
+                <td colSpan={2}>
+                  <hr />
+                </td>
+              </tr>
+              <tr>
+                <td style={{textAlign: 'right'}}>Frets</td>
+                <td>
+                  <input type="number" name="frets" value={frets} onChange={handleChange} style={{width: '7ch'}} />
+                </td>
+              </tr>
+              <tr>
+                <td colSpan={2}>
+                    <hr />
+                </td>
+              </tr>
+              <tr>
+                <td style={{textAlign: 'right'}}>Page width</td>
+                <td>
+                  <input type="number" name="pageWidth" value={pageWidth} onChange={handleChange} style={{width: '7ch'}} />
+                </td>
+              </tr>
+              <tr>
+                <td style={{textAlign: 'right'}}>&times; height</td>
+                <td>
+                  <input type="number" name="pageHeight" value={pageHeight} onChange={handleChange} style={{width: '7ch'}} />
+                </td>
+              </tr>
+              <tr>
+                <td style={{textAlign: 'right'}}>+ margin</td>
+                <td>
+                  <input type="number" name="margin" value={margin} onChange={handleChange} style={{width: '7ch'}} />
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <hr />
+          <div style={{textAlign: 'center'}}>
+            <button type="button" onClick={handleSaveButtonClick} data-target=".paper-content" data-filename={filename} title={filename}>Save</button>{' '}
             <button type="button" onClick={print}>Print</button>
           </div>
-        </header>
+        </div>
 
-        <div className="layout-container">
-          <div className="page-outline">
-            <svg className="layout" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" width={insideWidth + unit} height={insideHeight + unit} style={{margin: margin + unit}}>
-              <rect x={insideWidth - 1 - 1/32 + 'in'} y={insideHeight - 1 - 1/32 + 'in'} width="1in" height="1in" fill="none" stroke="gray" strokeWidth="0.5pt" />
-              <text x={insideWidth - 1/2 - 1/32 + 'in'} y={insideHeight - 1/2 + 1/32 + 'in'} fontFamily="Helvetica Neue, sans-serif" fontSize="10px" textAnchor="middle">This square is 1&quot;.</text>
+        <div className="output-container">
+          <div className="paper-container">
+            <div className="paper-surface">
+              <svg className="paper-content" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" viewBox={`0 0 ${insideWidth * 96} ${insideHeight * 96}`} style={{height: insideHeight + unit, margin: margin + unit, width: insideWidth + unit}}>
+                <rect x={insideWidth - 1 - 1/32 + 'in'} y={insideHeight - 1 - 1/32 + 'in'} width="1in" height="1in" fill="none" stroke="gray" strokeWidth="0.5pt" />
+                <text x={insideWidth - 1/2 - 1/32 + 'in'} y={insideHeight - 1/2 + 1/32 + 'in'} fontFamily="Helvetica Neue, sans-serif" fontSize="10px" textAnchor="middle">This square is 1&quot;.</text>
 
-              <symbol id="fretboard"  width={columnWidth + unit} height={layoutHeight}>
-                <g fill="none" stroke="black" strokeWidth="0.5pt" strokeDasharray="0" fontFamily="Helvetica Neue, sans-serif" fontSize="10px" textAnchor="middle">
-                  <line x1={columnWidth / 2 + unit} y1={0} x2={columnWidth / 2 + unit} y2={layoutHeight + unit} stroke="gray" />
-                  {Array(frets + 1).fill(null).map((_, fret) => {
-                    let y1 = overlap + getFretPosition(fret, scaleLength, tones);
-                    let y2 = overlap + getFretPosition(fret, otherScaleLength, tones);
-                    const makePerpendicular = Math.abs(scaleDifference) * perpendicularAt;
-                    if (scaleDifference < 0) {
-                      y1 += makePerpendicular;
-                    } else {
-                      y2 += makePerpendicular;
-                    }
-                    const yMiddle = (y1 + y2) / 2;
-                    return (
-                      <g key={fret}>
-                        <text x={columnWidth / 2 + unit} y={(yMiddle - 1/32) + unit} fill="black" stroke="none">{fret === 0 ? scaleDescription : fret}</text>
-                        <line x1={0} y1={y1 + unit} x2={columnWidth + unit} y2={y2 + unit} strokeDasharray={fret === 0 ? '3pt' : null} />
-                      </g>
-                    );
+                <symbol id="fretboard"  width={columnWidth + unit} height={layoutHeight + unit}>
+                  <g fill="none" stroke="black" strokeWidth="0.5pt" strokeDasharray="0" fontFamily="Helvetica Neue, sans-serif" fontSize="10px" textAnchor="middle">
+                    <line x1={columnWidth / 2 + unit} y1={0} x2={columnWidth / 2 + unit} y2={layoutHeight + unit} stroke="gray" />
+                    {Array(frets + 1).fill(null).map((_, fret) => {
+                      let y1 = overlap + getFretPosition(fret, scaleLength, tones);
+                      let y2 = overlap + getFretPosition(fret, otherScaleLength, tones);
+                      const makePerpendicular = Math.abs(scaleDifference) * perpendicularAt;
+                      if (scaleDifference < 0) {
+                        y1 += makePerpendicular;
+                      } else {
+                        y2 += makePerpendicular;
+                      }
+                      const yMiddle = (y1 + y2) / 2;
+                      return (
+                        <g key={fret}>
+                          <text x={columnWidth / 2 + unit} y={(yMiddle - 1/32) + unit} fill="black" stroke="none">{fret === 0 ? scaleDescription : fret}</text>
+                          <line x1={0} y1={y1 + unit} x2={columnWidth + unit} y2={y2 + unit} strokeDasharray={fret === 0 ? '3pt' : null} />
+                        </g>
+                      );
+                    })}
+                  </g>
+                </symbol>
+
+                <symbol id="registration-mark" overflow="visible">
+                  <g fill="none" stroke="black" strokeWidth="1pt" strokeDasharray="0">
+                    <circle cx={`${overlap / 2}in`} cy={`${overlap / 2}in`} r={`${overlap/3}in`} />
+                    <line x1="0" y1="0" x2={`${overlap}in`} y2={`${overlap}in`} />
+                    <line x1="0" y1={`${overlap}in`} x2={`${overlap}in`} y2="0" />
+                  </g>
+                </symbol>
+
+                <g fill="none" stroke="gray" strokeWidth="0.5pt" strokeDasharray="3pt">
+                  <rect width={insideWidth + unit} height={insideHeight + unit} />
+
+                  {Array(columnsCount).fill(null).map((_, c) => {
+                    const x = columnWidth * c;
+
+                    return <g key={c}>
+                      <svg xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" x={x + unit} y={0} width={columnWidth + unit} height={insideHeight + unit}>
+                        <g style={{display: c === 0 ? 'none' : ''}}>
+                          <use xlinkHref="#registration-mark" x="0" y="0" />
+                          <use xlinkHref="#registration-mark" x={columnWidth - overlap + unit} y="0" />
+                        </g>
+
+                        <use xlinkHref="#fretboard" x={0} y={(insideHeight - overlap) * -1 * c + unit} width={columnWidth + unit} height={layoutHeight + unit} />
+
+                        <g style={{display: c === columnsCount - 1 ? 'none' : ''}}>
+                          <use xlinkHref="#registration-mark" x="0" y={insideHeight - overlap + unit} />
+                          <use xlinkHref="#registration-mark" x={columnWidth - overlap + unit} y={insideHeight - overlap + unit} />
+                        </g>
+                      </svg>
+
+                      {c === 0 ? null : <line x1={x + unit} y1={0} x2={x + unit} y2={insideHeight + unit} />}
+                    </g>
                   })}
                 </g>
-              </symbol>
-
-              <symbol id="registration-mark" overflow="visible">
-                <g fill="none" stroke="black" strokeWidth="1pt" strokeDasharray="0">
-                  <circle cx={`${overlap / 2}in`} cy={`${overlap / 2}in`} r={`${overlap/3}in`} />
-                  <line x1="0" y1="0" x2={`${overlap}in`} y2={`${overlap}in`} />
-                  <line x1="0" y1={`${overlap}in`} x2={`${overlap}in`} y2="0" />
-                </g>
-              </symbol>
-
-              <g fill="none" stroke="gray" strokeWidth="0.5pt" strokeDasharray="3pt">
-                <rect width={insideWidth + unit} height={insideHeight + unit} />
-                {Array(columnsCount).fill(null).map((_, c) => {
-                  const x = columnWidth * c;
-                  return <g key={c}>
-                    <svg xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" x={x + unit} y={0} width={columnWidth + unit} height={insideHeight + unit}>
-                      <g style={{display: c === 0 ? 'none' : ''}}>
-                        <use xlinkHref="#registration-mark" x="0" y="0" />
-                        <use xlinkHref="#registration-mark" x={columnWidth - overlap + unit} y="0" />
-                      </g>
-                      <use xlinkHref="#fretboard" x={0} y={(insideHeight - overlap) * -1 * c + unit} width={columnWidth + unit} height={layoutHeight + unit} />
-                      <g style={{display: c === columnsCount - 1 ? 'none' : ''}}>
-                        <use xlinkHref="#registration-mark" x="0" y={insideHeight - overlap + unit} />
-                        <use xlinkHref="#registration-mark" x={columnWidth - overlap + unit} y={insideHeight - overlap + unit} />
-                      </g>
-                    </svg>
-                    {c === 0 ? null : <line x1={x + unit} y1={0} x2={x + unit} y2={insideHeight + unit} />}
-                  </g>
-                })}
-              </g>
-            </svg>
+              </svg>
+            </div>
           </div>
 
           <footer className="app-footer">
-            Note: This might not print at exactly the right scale with your browser and/or printer without manually tweaking some settings. Experiment!
-            <br />
-            <a href="https://github.com/brian-c/fretboard-template-generator">Source on GitHub.</a>{' '}
+            Note: This might not print at exactly the right scale with your browser and/or printer without manually tweaking some settings. Experiment!{' '}
+            <a href="https://github.com/brian-c/fretboard-template-generator">Source is on GitHub.</a>
           </footer>
         </div>
       </div>
