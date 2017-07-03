@@ -221,7 +221,7 @@
               <tr>
                 <td style={{textAlign: 'right'}}>Scale length</td>
                 <td>
-                  <input type="number" name="scaleLength" value={scaleLength} onChange={handleChange} style={{width: '7ch'}} />
+                  <input type="number" name="scaleLength" value={scaleLength} step={metric ? 1 : 1/8} onChange={handleChange} style={{width: '7ch'}} />
                 </td>
               </tr>
               <tr>
@@ -237,13 +237,13 @@
               <tr>
                 <td style={{textAlign: 'right'}}>Second scale</td>
                 <td>
-                  <input type="number" name="otherScaleLength" value={otherScaleLength} onChange={handleChange} style={{width: '7ch'}} />
+                  <input type="number" name="otherScaleLength" value={otherScaleLength} step={metric ? 1 : 1/8} onChange={handleChange} style={{width: '7ch'}} />
                 </td>
               </tr>
               <tr>
                 <td style={{textAlign: 'right'}}>&perp; at</td>
                 <td>
-                  <input type="number" name="perpendicularAt" value={perpendicularAt} onChange={handleChange} style={{width: '7ch'}} />
+                  <input type="number" name="perpendicularAt" value={perpendicularAt} step={1/10} onChange={handleChange} style={{width: '7ch'}} />
                 </td>
               </tr>
             </tbody>}
@@ -256,7 +256,7 @@
               <tr>
                 <td style={{textAlign: 'right'}}>Frets</td>
                 <td>
-                  <input type="number" name="frets" value={frets} onChange={handleChange} style={{width: '7ch'}} />
+                  <input type="number" name="frets" value={frets} step={1} onChange={handleChange} style={{width: '7ch'}} />
                 </td>
               </tr>
               <tr>
@@ -267,19 +267,19 @@
               <tr>
                 <td style={{textAlign: 'right'}}>Page width</td>
                 <td>
-                  <input type="number" name="pageWidth" value={pageWidth} onChange={handleChange} style={{width: '7ch'}} />
+                  <input type="number" name="pageWidth" value={pageWidth} step={metric ? 1 : 1/8} onChange={handleChange} style={{width: '7ch'}} />
                 </td>
               </tr>
               <tr>
                 <td style={{textAlign: 'right'}}>&times; height</td>
                 <td>
-                  <input type="number" name="pageHeight" value={pageHeight} onChange={handleChange} style={{width: '7ch'}} />
+                  <input type="number" name="pageHeight" value={pageHeight} step={metric ? 1 : 1/8} onChange={handleChange} style={{width: '7ch'}} />
                 </td>
               </tr>
               <tr>
                 <td style={{textAlign: 'right'}}>+ margin</td>
                 <td>
-                  <input type="number" name="margin" value={margin} onChange={handleChange} style={{width: '7ch'}} />
+                  <input type="number" name="margin" value={margin} step={metric ? 1 : 1/8} onChange={handleChange} style={{width: '7ch'}} />
                 </td>
               </tr>
               <tr>
