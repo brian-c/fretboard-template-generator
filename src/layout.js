@@ -37,24 +37,26 @@ export default function({
       width={`${width}${unit}`}
       height={`${height}${unit}`}
     >
-      <symbol id="layout__fretboard">
-        <Fretboard
-          width={columnWidth}
-          frets={frets}
-          firstScaleLength={firstScaleLength}
-          secondScaleLength={secondScaleLength}
-          perpendicularAt={perpendicularAt}
-          margin={overlap}
-          unit={unit}
-        />
-      </symbol>
+      <defs>
+        <symbol id="layout__fretboard">
+          <Fretboard
+            width={columnWidth}
+            frets={frets}
+            firstScaleLength={firstScaleLength}
+            secondScaleLength={secondScaleLength}
+            perpendicularAt={perpendicularAt}
+            margin={overlap}
+            unit={unit}
+          />
+        </symbol>
 
-      <symbol id="layout__registration-mark">
-        <RegistrationMark
-          size={overlap}
-          unit={unit}
-        />
-      </symbol>
+        <symbol id="layout__registration-mark">
+          <RegistrationMark
+            size={overlap}
+            unit={unit}
+          />
+        </symbol>
+      </defs>
 
       {Array(columnsCount).fill(null).map((_, c) => {
         const x = columnWidth * c;
