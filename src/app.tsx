@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import * as React from 'react';
+import { useState, useEffect } from 'react';
 import Controls from './controls';
 import Page from './page';
 import Layout from './layout';
 import useFretboardState from './use-fretboard-state';
-import presets from './presets';
+import presets, { FretboardState } from './presets';
 import { StyleSheet, css } from 'aphrodite';
 
 const styles = StyleSheet.create({
@@ -60,18 +61,21 @@ const styles = StyleSheet.create({
 });
 
 export default function App() {
-  const [state, handleChange] = useFretboardState(presets.DEFAULT);
-  const [scale, setScale] = useState(1);
+  const [state, handleChange]: [FretboardState, Function] = useFretboardState(presets.DEFAULT);
+  const [scale, setScale]: [number, Function] = useState(1);
 
   useEffect(() => {
     document.body.style.overflow = 'hidden';
 
     return () => {
       document.body.style.overflow = '';
-    }
+    };
   });
 
-  function handleScaleChange(event) {
+  type NumberInput = { valueAsNumber: number };
+  type NumberInputEvent = { currentTarget: NumberInput };
+
+  function handleScaleChange(event: NumberInputEvent) {
     setScale(event.currentTarget.valueAsNumber);
   }
 
@@ -88,7 +92,6 @@ export default function App() {
             pageWidth={state.pageWidth}
             pageHeight={state.pageHeight}
             pageMargin={state.pageMargin}
-            compensation={state.compensation}
             layoutSvgId="app__fretboard-layout"
             onChange={handleChange}
           />

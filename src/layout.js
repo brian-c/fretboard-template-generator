@@ -27,6 +27,7 @@ export default function({
   const fretboardHeight = getFretPosition(frets, Math.max(firstScaleLength, secondScaleLength)) + overlap * 2;
 
   const columnsCount = getColumnsCount(height, fretboardHeight, overlap);
+
   const columnWidth = width / columnsCount;
 
   return (

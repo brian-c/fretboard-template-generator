@@ -1,6 +1,10 @@
-import React from 'react';
+import * as React from 'react';
 
-export function getFretPosition(fret, scaleLength, tones = 12) {
+export function getFretPosition(
+  fret: number,
+  scaleLength: number,
+  tones: number = 12
+): number {
   return scaleLength - scaleLength / (2 ** (fret / tones));
 }
 

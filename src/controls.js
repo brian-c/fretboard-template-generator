@@ -17,7 +17,7 @@ export default function({
 }) {
   return (
     <React.Fragment>
-      <header style={{textAlign: 'center'}}>
+      <header style={{ textAlign: 'center' }}>
         <strong>Fretboard template generator</strong>
       </header>
 
@@ -183,7 +183,7 @@ export default function({
 
       <hr />
 
-      <div style={{textAlign: 'center'}}>
+      <div style={{ textAlign: 'center' }}>
         <SvgSaveButton
           svgId={layoutSvgId}
           filename={`${frets}-frets-on-${firstScaleLength + (multiscale ? `-through-${secondScaleLength}` : '')}${metric ? 'mm' : 'in'}-scale.svg`}
