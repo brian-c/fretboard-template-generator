@@ -39,15 +39,16 @@ const styles = StyleSheet.create({
   },
 
   layoutWrapper: {
+    flexGrow: 1,
     overflow: 'auto',
     padding: '4vw 4vw 5vw',
   },
 
   scaleWrapper: {
-    background: '#0003',
+    background: '#0006',
     borderRadius: '2rem',
-    bottom: '0.5rem',
-    padding: '0.3rem 1rem',
+    bottom: '1rem',
+    padding: '0.2rem 1rem',
     left: '50%',
     position: 'absolute',
     transform: 'translateX(-50%)',
@@ -62,7 +63,7 @@ const styles = StyleSheet.create({
 
 export default function App() {
   const [state, handleChange]: [FretboardState, Function] = useFretboardState(presets.DEFAULT);
-  const [scale, setScale]: [number, Function] = useState(1);
+  const [scale, setScale]: [number, Function] = useState(0.99);
 
   useEffect(() => {
     document.body.style.overflow = 'hidden';
@@ -119,6 +120,7 @@ export default function App() {
               max={3}
               step={1/50}
               value={scale}
+              title="Preview zoom"
               onChange={handleScaleChange}
             />
           </div>
