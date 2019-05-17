@@ -11,7 +11,6 @@ export default function({
   pageWidth,
   pageHeight,
   pageMargin,
-  handleSaveButtonClick,
   layoutSvgId,
   onChange
 }) {
@@ -119,7 +118,7 @@ export default function({
                 type="number"
                 name="pageWidth"
                 value={pageWidth}
-                min={3}
+                min={1}
                 step={metric ? 1 : 1/8}
                 onChange={onChange}
                 style={{ width: '7ch' }}
@@ -134,7 +133,7 @@ export default function({
                 type="number"
                 name="pageHeight"
                 value={pageHeight}
-                min={3}
+                min={1}
                 step={metric ? 1 : 1/8}
                 onChange={onChange}
                 style={{ width: '7ch' }}

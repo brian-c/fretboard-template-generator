@@ -59,7 +59,15 @@ export default function({
         </symbol>
       </defs>
 
-      {Array(columnsCount).fill(null).map((_, c) => {
+      {columnsCount < 1 || columnsCount > 10 ? (
+        <text
+          x="50%"
+          y="50%"
+          textAnchor="middle"
+          >
+            Invalid input
+          </text>
+      ) : Array(columnsCount).fill(null).map((_, c) => {
         const x = columnWidth * c;
 
         return (

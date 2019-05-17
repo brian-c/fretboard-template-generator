@@ -100,9 +100,9 @@ export default function App() {
         <section className={css(styles.output)}>
           <div className={css(styles.layoutWrapper)}>
             <Page
-              width={state.pageWidth}
-              height={state.pageHeight}
-              margin={state.pageMargin}
+              width={parseFloat(state.pageWidth)}
+              height={parseFloat(state.pageHeight)}
+              margin={parseFloat(state.pageMargin)}
               unit={state.metric ? 'mm' : 'in'}
               style={{ width: `${scale * 100}%` }}
             >
@@ -128,13 +128,13 @@ export default function App() {
       <Layout
         id="app__fretboard-layout"
         className={css(styles.printVersion)}
-        width={state.pageWidth - state.pageMargin * 2}
-        height={state.pageHeight - state.pageMargin * 2}
-        frets={state.frets}
-        firstScaleLength={state.firstScaleLength}
-        secondScaleLength={state.multiscale ? state.secondScaleLength : state.firstScaleLength}
-        perpendicularAt={state.perpendicularAt}
-        overlap={state.metric ? 20 : 1/2}
+        width={parseFloat(state.pageWidth) - parseFloat(state.pageMargin) * 2 || 2}
+        height={parseFloat(state.pageHeight) - parseFloat(state.pageMargin) * 2 || 2}
+        frets={parseFloat(state.frets) || 0}
+        firstScaleLength={parseFloat(state.firstScaleLength) || 0}
+        secondScaleLength={parseFloat(state.multiscale ? state.secondScaleLength : state.firstScaleLength) || 0}
+        perpendicularAt={parseFloat(state.perpendicularAt) || 1/2}
+        overlap={Math.min(state.metric ? 15 : 1/2, parseFloat(state.pageHeight) / 3}
         unit={state.metric ? 'mm' : 'in'}
       />
     </React.Fragment>

@@ -13,20 +13,19 @@ const MEASURED_STATE_PROPERTIES: string[] = [
 ];
 
 const transformations: { [key: string]: Function } = {
-  metric(state: FretboardState) {
+  metric(state: FretboardState): void {
     MEASURED_STATE_PROPERTIES.forEach((property: string) => {
       state[property] = state.metric ? (
         state[property] * MM_IN_INCH
       ) : (
         state[property] / MM_IN_INCH
-      );
-      state[property] = parseFloat(state[property].toFixed(3));
+      ).toFixed(3);
     });
   }
 };
 
 const INPUT_VALUE_KEYS: { [key: string]: string } = {
-  number: 'valueAsNumber',
+  number: 'value',
   checkbox: 'checked',
 };
 
@@ -42,10 +41,6 @@ function useFretboardState(initialState: any): [any, Function] {
       ...state,
       [property]: currentTarget[valueKey],
     };
-
-    if (currentTarget.type === 'number' && !newState[property]) {
-      newState[property] = 0;
-    }
 
     if (transformations[property]) {
       transformations[property](newState);
