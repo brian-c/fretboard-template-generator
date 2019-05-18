@@ -1,19 +1,58 @@
 import React from 'react';
 import SvgSaveButton from './svg-save-button';
+import { inputPresets } from './presets';
+
+const MM_PER_INCH = 25.4;
+
+function stringifyNumber(number) {
+  return parseFloat(number.toFixed(3)).toString();
+}
 
 export default function({
   firstScaleLength,
   multiscale,
   secondScaleLength,
   perpendicularAt,
-  metric,
   frets,
   pageWidth,
   pageHeight,
   pageMargin,
+  metric,
   layoutSvgId,
-  onChange
+  onChange,
 }) {
+  function setMetric(value) {
+    const multiplier = value ? MM_PER_INCH : 1 / MM_PER_INCH;
+
+    onChange({
+      firstScaleLength: stringifyNumber(parseFloat(firstScaleLength) * multiplier),
+      secondScaleLength: stringifyNumber(parseFloat(secondScaleLength) * multiplier),
+      pageWidth: stringifyNumber(parseFloat(pageWidth) * multiplier),
+      pageHeight: stringifyNumber(parseFloat(pageHeight) * multiplier),
+      pageMargin: stringifyNumber(parseFloat(pageMargin) * multiplier),
+      metric: value,
+    });
+  }
+
+  function onGeneralChange(event) {
+    const valueProperty = event.currentTarget.type === 'checkbox' ? 'checked' : 'value';
+    onChange({
+      [event.currentTarget.name]: event.currentTarget[valueProperty],
+    });
+  }
+
+  function onMetricChange(event) {
+    setMetric(event.currentTarget.checked);
+  }
+
+  function onTemplateSelection(event) {
+    const value = parseFloat(event.currentTarget.value);
+    onChange({
+      firstScaleLength: stringifyNumber(metric ? value * MM_PER_INCH : value),
+      multiscale: false,
+    });
+  }
+
   return (
     <React.Fragment>
       <header style={{ textAlign: 'center' }}>
@@ -32,9 +71,30 @@ export default function({
                 name="firstScaleLength"
                 value={firstScaleLength}
                 step={metric ? 1 : 1/8}
-                onChange={onChange}
-                style={{ width: '7ch' }}
+                onChange={onGeneralChange}
+                style={{ width: '6ch' }}
               />
+
+              <select
+                ariaLabel="Presets"
+                value=""
+                onChange={onTemplateSelection}
+                style={{ width: '2.3ch' }}
+              >
+                <option
+                  value=""
+                  disabled
+                ></option>
+
+                {Array.from(inputPresets.entries()).map(([name, value]) => (
+                  <option
+                    key={name}
+                    value={value}
+                  >
+                    {name}
+                  </option>
+              ))}
+              </select>
             </td>
           </tr>
 
@@ -45,7 +105,7 @@ export default function({
                 id="multiscale-checkbox"
                 name="multiscale"
                 checked={multiscale}
-                onChange={onChange}
+                onChange={onGeneralChange}
               />
             </td>
             <td>
@@ -64,7 +124,7 @@ export default function({
                   name="secondScaleLength"
                   value={secondScaleLength}
                   step={metric ? 1 : 1/8}
-                  onChange={onChange}
+                  onChange={onGeneralChange}
                   style={{ width: '7ch' }}
                 />
               </td>
@@ -78,7 +138,8 @@ export default function({
                   name="perpendicularAt"
                   value={perpendicularAt}
                   step={1/10}
-                  onChange={onChange} style={{ width: '7ch' }}
+                  onChange={onGeneralChange}
+                  style={{ width: '7ch' }}
                 />
               </td>
             </tr>
@@ -100,7 +161,7 @@ export default function({
                 name="frets"
                 value={frets}
                 step={1}
-                onChange={onChange}
+                onChange={onGeneralChange}
                 style={{ width: '7ch' }} />
             </td>
           </tr>
@@ -120,7 +181,7 @@ export default function({
                 value={pageWidth}
                 min={1}
                 step={metric ? 1 : 1/8}
-                onChange={onChange}
+                onChange={onGeneralChange}
                 style={{ width: '7ch' }}
               />
             </td>
@@ -135,7 +196,7 @@ export default function({
                 value={pageHeight}
                 min={1}
                 step={metric ? 1 : 1/8}
-                onChange={onChange}
+                onChange={onGeneralChange}
                 style={{ width: '7ch' }}
               />
             </td>
@@ -149,9 +210,9 @@ export default function({
                 name="pageMargin"
                 value={pageMargin}
                 min={0}
-                max={Math.min(pageWidth, pageHeight) / 3}
+                max={Math.min(parseFloat(pageWidth), parseFloat(pageHeight)) / 3}
                 step={metric ? 1 : 1/8}
-                onChange={onChange}
+                onChange={onGeneralChange}
                 style={{ width: '7ch' }}
               />
             </td>
@@ -170,7 +231,7 @@ export default function({
                 id="metric-checkbox"
                 name="metric"
                 checked={metric}
-                onChange={onChange}
+                onChange={onMetricChange}
               />
             </td>
             <td>

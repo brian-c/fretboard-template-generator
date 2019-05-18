@@ -3,8 +3,8 @@ import { useState, useEffect } from 'react';
 import Controls from './controls';
 import Page from './page';
 import Layout from './layout';
-import useFretboardState from './use-fretboard-state';
-import presets, { FretboardState } from './presets';
+import useLocalStorage from './use-local-storage';
+import { InputState, defaultState } from './presets';
 import { StyleSheet, css } from 'aphrodite';
 
 const styles = StyleSheet.create({
@@ -62,21 +62,15 @@ const styles = StyleSheet.create({
 });
 
 export default function App() {
-  const [state, handleChange]: [FretboardState, Function] = useFretboardState(presets.DEFAULT);
+  const [state, setState]: [InputState, Function] = useLocalStorage('fretboard', defaultState);
   const [scale, setScale]: [number, Function] = useState(0.99);
 
   useEffect(() => {
     document.body.style.overflow = 'hidden';
-
-    return () => {
-      document.body.style.overflow = '';
-    };
+    return () => document.body.style.overflow = '';
   });
 
-  type NumberInput = { valueAsNumber: number };
-  type NumberInputEvent = { currentTarget: NumberInput };
-
-  function handleScaleChange(event: NumberInputEvent) {
+  function handleScaleChange(event) {
     setScale(event.currentTarget.valueAsNumber);
   }
 
@@ -93,8 +87,14 @@ export default function App() {
             pageWidth={state.pageWidth}
             pageHeight={state.pageHeight}
             pageMargin={state.pageMargin}
+            metric={state.metric}
             layoutSvgId="app__fretboard-layout"
-            onChange={handleChange}
+            onChange={changes => {
+              setState({
+                ...state,
+                ...changes,
+              });
+            }}
           />
         </section>
 
@@ -107,9 +107,7 @@ export default function App() {
               unit={state.metric ? 'mm' : 'in'}
               style={{ width: `${scale * 100}%` }}
             >
-              <use
-                xlinkHref="#app__fretboard-layout"
-              />
+              <use xlinkHref="#app__fretboard-layout" />
             </Page>
           </div>
 
@@ -136,7 +134,7 @@ export default function App() {
         firstScaleLength={parseFloat(state.firstScaleLength) || 0}
         secondScaleLength={parseFloat(state.multiscale ? state.secondScaleLength : state.firstScaleLength) || 0}
         perpendicularAt={parseFloat(state.perpendicularAt) || 1/2}
-        overlap={Math.min(state.metric ? 15 : 1/2, parseFloat(state.pageHeight) / 3}
+        overlap={Math.min(state.metric ? 15 : 1/2, parseFloat(state.pageHeight) / 3)}
         unit={state.metric ? 'mm' : 'in'}
       />
     </React.Fragment>
