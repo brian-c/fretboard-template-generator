@@ -76,7 +76,7 @@ export default function({
               />
 
               <select
-                ariaLabel="Presets"
+                aria-label="Presets"
                 value=""
                 onChange={onTemplateSelection}
                 style={{ width: '2.3ch' }}

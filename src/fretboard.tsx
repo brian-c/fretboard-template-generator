@@ -1,5 +1,7 @@
 import * as React from 'react';
 
+const FRET_TANG_WIDTH = '0.023in';
+
 export function getFretPosition(
   fret: number,
   scaleLength: number,
@@ -85,8 +87,8 @@ export default function({
               x2={`${width}${unit}`}
               y2={`${y2}${unit}`}
               stroke="black"
-              strokeWidth="1pt"
-              strokeDasharray={f === 0 ? '3pt' : null}
+              strokeWidth={FRET_TANG_WIDTH}
+              strokeDasharray={f === 0 ? FRET_TANG_WIDTH : null}
             />
           </React.Fragment>
         );
