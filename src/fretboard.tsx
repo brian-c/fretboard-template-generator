@@ -1,6 +1,36 @@
 import * as React from 'react';
+import { StyleSheet, css } from 'aphrodite';
 
 const FRET_TANG_WIDTH = '0.023in';
+
+const styles = StyleSheet.create({
+  centerLine: {
+    stroke: 'gray',
+    strokeWidth: '0.5pt',
+  },
+
+  fretLabelBackground: {
+    fill: 'white',
+  },
+
+  fretLabel: {
+    fill: 'black',
+    fontFamily: 'Helvetica Neue, sans-serif',
+    fontWeight: 'bold',
+    fontSize: '8pt',
+    stroke: 'none',
+    textAnchor: 'middle',
+  },
+
+  fretLine: {
+    stroke: 'black',
+    strokeWidth: FRET_TANG_WIDTH,
+  },
+
+  nut: {
+    strokeDasharray: FRET_TANG_WIDTH,
+  },
+});
 
 export function getFretPosition(
   fret: number,
@@ -10,7 +40,7 @@ export function getFretPosition(
   return scaleLength - scaleLength / (2 ** (fret / tones));
 }
 
-export default function({
+export default function Fretboard({
   frets,
   firstScaleLength,
   secondScaleLength,
@@ -28,12 +58,11 @@ export default function({
       height={`${height}${unit}`}
     >
       <line
+        className={css(styles.centerLine)}
         x1={`${width / 2}${unit}`}
         y1={0}
         x2={`${width / 2}${unit}`}
         y2={`${height}${unit}`}
-        stroke="gray"
-        strokeWidth="0.5pt"
       />
 
       {Array(frets + 1).fill(null).map((_, f) => {
@@ -52,22 +81,17 @@ export default function({
         return (
           <React.Fragment key={f}>
             <circle
+              className={css(styles.fretLabelBackground)}
               cx={`${width / 2}${unit}`}
               cy={`${yMidpoint}${unit}`}
-              r='8pt'
-              fill="white"
               transform="translate(0, -4)"
+              r='8pt'
             />
 
             <text
+              className={css(styles.fretLabel)}
               x={`${width / 2}${unit}`}
               y={`${yMidpoint}${unit}`}
-              fontFamily="Helvetica Neue, sans-serif"
-              fontWeight="bold"
-              fontSize="8pt"
-              textAnchor="middle"
-              fill="black"
-              stroke="none"
               transform="translate(0, -3)"
             >
               {f === 0 ? (
@@ -82,13 +106,11 @@ export default function({
             </text>
 
             <line
+              className={css(styles.fretLine, f === 0 && styles.nut)}
               x1={0}
               y1={`${y1}${unit}`}
               x2={`${width}${unit}`}
               y2={`${y2}${unit}`}
-              stroke="black"
-              strokeWidth={FRET_TANG_WIDTH}
-              strokeDasharray={f === 0 ? FRET_TANG_WIDTH : null}
             />
           </React.Fragment>
         );

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useState, useEffect } from 'react';
-import Controls from './controls';
+import Inputs from './inputs';
 import Page from './page';
 import Layout from './layout';
 import useLocalStorage from './use-local-storage';
@@ -21,16 +21,15 @@ const styles = StyleSheet.create({
     }
   },
 
-  input: {
+  inputsContainer: {
     background: '#eee',
     borderRight: '1px solid #0004',
     padding: '1rem',
-    width: '22ch',
   },
 
-  output: {
+  outputContainer: {
     background: '#ccc',
-    boxShadow: '0 0.5em 1em -0.5em #0006 inset',
+    boxShadow: '0 0.5em 1em -0.5em #0004 inset',
     display: 'flex',
     flexDirection: 'column',
     flexGrow: 1,
@@ -44,7 +43,7 @@ const styles = StyleSheet.create({
     padding: '4vw 4vw 5vw',
   },
 
-  scaleWrapper: {
+  scaleControlWrapper: {
     background: '#0006',
     borderRadius: '2rem',
     bottom: '1rem',
@@ -77,8 +76,8 @@ export default function App() {
   return (
     <React.Fragment>
       <main className={css(styles.app)}>
-        <section className={css(styles.input)}>
-          <Controls
+        <section className={css(styles.inputsContainer)}>
+          <Inputs
             frets={state.frets}
             firstScaleLength={state.firstScaleLength}
             multiscale={state.multiscale}
@@ -98,7 +97,7 @@ export default function App() {
           />
         </section>
 
-        <section className={css(styles.output)}>
+        <section className={css(styles.outputContainer)}>
           <div className={css(styles.layoutWrapper)}>
             <Page
               width={parseFloat(state.pageWidth)}
@@ -111,7 +110,7 @@ export default function App() {
             </Page>
           </div>
 
-          <div className={css(styles.scaleWrapper)}>
+          <div className={css(styles.scaleControlWrapper)}>
             <input
               type="range"
               min={1/10}
@@ -133,7 +132,7 @@ export default function App() {
         frets={parseFloat(state.frets) || 0}
         firstScaleLength={parseFloat(state.firstScaleLength) || 0}
         secondScaleLength={parseFloat(state.multiscale ? state.secondScaleLength : state.firstScaleLength) || 0}
-        perpendicularAt={parseFloat(state.perpendicularAt) || 1/2}
+        perpendicularAt={parseFloat(state.perpendicularAt) || 0}
         overlap={Math.min(state.metric ? 15 : 1/2, parseFloat(state.pageHeight) / 3)}
         unit={state.metric ? 'mm' : 'in'}
       />

@@ -1,13 +1,17 @@
 import React from 'react';
+import { StyleSheet, css } from 'aphrodite';
 
-export default function({ size, unit }) {
+const styles = StyleSheet.create({
+  registrationMark: {
+    fill: 'none',
+    stroke: 'black',
+    strokeWidth: '0.5pt',
+  },
+});
+
+export default function RegistrationMark({ size, unit }) {
   return (
-    <g
-      fill="none"
-      stroke="black"
-      strokeWidth="0.5pt"
-      strokeDasharray="0"
-    >
+    <g className={css(styles.registrationMark)}>
       <circle
         cx={`${size / 2}${unit}`}
         cy={`${size / 2}${unit}`}

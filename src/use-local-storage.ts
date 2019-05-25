@@ -14,7 +14,7 @@ function write(key: string, value: any): void {
   } catch (error) {}
 }
 
-function useLocalStorage(key: string, defaultValue: any): [any, Function] {
+export default function useLocalStorage(key: string, defaultValue: any): [any, Function] {
   const [value, setValue] = useState(read(key) || defaultValue);
 
   return [
@@ -24,6 +24,4 @@ function useLocalStorage(key: string, defaultValue: any): [any, Function] {
       setValue(newValue);
     },
   ];
-}
-
-export default useLocalStorage;
+};

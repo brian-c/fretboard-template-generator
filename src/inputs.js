@@ -1,14 +1,43 @@
 import React from 'react';
 import SvgSaveButton from './svg-save-button';
 import { inputPresets } from './presets';
+import { StyleSheet, css } from 'aphrodite';
 
 const MM_PER_INCH = 25.4;
+
+const styles = StyleSheet.create({
+  container: {
+    textAlign: 'center',
+    whiteSpace: 'nowrap',
+  },
+
+  leadingCell: {
+    fontWeight: 'normal',
+    textAlign: 'end',
+  },
+
+  trailingCell: {
+    textAlign: 'start'
+  },
+
+  textInput: {
+    width: '7ch',
+  },
+
+  textInputWithMenu: {
+    width: '6ch',
+  },
+
+  presetsMenu: {
+    width: '2.3ch',
+  },
+});
 
 function stringifyNumber(number) {
   return parseFloat(number.toFixed(3)).toString();
 }
 
-export default function({
+export default function Inputs({
   firstScaleLength,
   multiscale,
   secondScaleLength,
@@ -54,8 +83,8 @@ export default function({
   }
 
   return (
-    <React.Fragment>
-      <header style={{ textAlign: 'center' }}>
+    <div className={css(styles.container)}>
+      <header>
         <strong>Fretboard template generator</strong>
       </header>
 
@@ -64,22 +93,22 @@ export default function({
       <table style={{ width: '100%' }}>
         <tbody>
           <tr>
-            <td style={{ textAlign: 'right' }}>Scale length</td>
-            <td>
+            <th className={css(styles.leadingCell)}>Scale length</th>
+            <td className={css(styles.trailingCell)}>
               <input
                 type="number"
+                className={css(styles.textInput, styles.textInputWithMenu)}
                 name="firstScaleLength"
                 value={firstScaleLength}
                 step={metric ? 1 : 1/8}
                 onChange={onGeneralChange}
-                style={{ width: '6ch' }}
               />
 
               <select
+                className={css(styles.presetsMenu)}
                 aria-label="Presets"
                 value=""
                 onChange={onTemplateSelection}
-                style={{ width: '2.3ch' }}
               >
                 <option
                   value=""
@@ -99,7 +128,7 @@ export default function({
           </tr>
 
           <tr>
-            <td style={{ textAlign: 'right' }}>
+            <th className={css(styles.leadingCell)}>
               <input
                 type="checkbox"
                 id="multiscale-checkbox"
@@ -107,46 +136,44 @@ export default function({
                 checked={multiscale}
                 onChange={onGeneralChange}
               />
-            </td>
-            <td>
+            </th>
+            <td className={css(styles.trailingCell)}>
               <label htmlFor="multiscale-checkbox">Multiscale</label>
             </td>
           </tr>
-        </tbody>
 
-        {multiscale && (
-          <tbody>
-            <tr>
-              <td style={{ textAlign: 'right' }}>Second scale</td>
-              <td>
-                <input
-                  type="number"
-                  name="secondScaleLength"
-                  value={secondScaleLength}
-                  step={metric ? 1 : 1/8}
-                  onChange={onGeneralChange}
-                  style={{ width: '7ch' }}
-                />
-              </td>
-            </tr>
+          {multiscale && (
+            <React.Fragment>
+              <tr>
+                <th className={css(styles.leadingCell)}>Second scale</th>
+                <td className={css(styles.trailingCell)}>
+                  <input
+                    type="number"
+                    className={css(styles.textInput)}
+                    name="secondScaleLength"
+                    value={secondScaleLength}
+                    step={metric ? 1 : 1/8}
+                    onChange={onGeneralChange}
+                  />
+                </td>
+              </tr>
 
-            <tr>
-              <td style={{ textAlign: 'right' }}>&perp; at</td>
-              <td>
-                <input
-                  type="number"
-                  name="perpendicularAt"
-                  value={perpendicularAt}
-                  step={1/10}
-                  onChange={onGeneralChange}
-                  style={{ width: '7ch' }}
-                />
-              </td>
-            </tr>
-          </tbody>
-        )}
+              <tr>
+                <th className={css(styles.leadingCell)}>&perp; at</th>
+                <td className={css(styles.trailingCell)}>
+                  <input
+                    type="number"
+                    className={css(styles.textInput)}
+                    name="perpendicularAt"
+                    value={perpendicularAt}
+                    step={1/10}
+                    onChange={onGeneralChange}
+                  />
+                </td>
+              </tr>
+            </React.Fragment>
+          )}
 
-        <tbody>
           <tr>
             <td colSpan={2}>
               <hr />
@@ -154,15 +181,16 @@ export default function({
           </tr>
 
           <tr>
-            <td style={{ textAlign: 'right' }}>Frets</td>
-            <td>
+            <th className={css(styles.leadingCell)}>Frets</th>
+            <td className={css(styles.trailingCell)}>
               <input
                 type="number"
+                className={css(styles.textInput)}
                 name="frets"
                 value={frets}
                 step={1}
                 onChange={onGeneralChange}
-                style={{ width: '7ch' }} />
+              />
             </td>
           </tr>
 
@@ -173,47 +201,47 @@ export default function({
           </tr>
 
           <tr>
-            <td style={{ textAlign: 'right' }}>Page width</td>
-            <td>
+            <th className={css(styles.leadingCell)}>Page width</th>
+            <td className={css(styles.trailingCell)}>
               <input
                 type="number"
+                className={css(styles.textInput)}
                 name="pageWidth"
                 value={pageWidth}
                 min={1}
                 step={metric ? 1 : 1/8}
                 onChange={onGeneralChange}
-                style={{ width: '7ch' }}
               />
             </td>
           </tr>
 
           <tr>
-            <td style={{ textAlign: 'right' }}>&times; height</td>
-            <td>
+            <th className={css(styles.leadingCell)}>&times; height</th>
+            <td className={css(styles.trailingCell)}>
               <input
                 type="number"
+                className={css(styles.textInput)}
                 name="pageHeight"
                 value={pageHeight}
                 min={1}
                 step={metric ? 1 : 1/8}
                 onChange={onGeneralChange}
-                style={{ width: '7ch' }}
               />
             </td>
           </tr>
 
           <tr>
-            <td style={{ textAlign: 'right' }}>+ margin</td>
-            <td>
+            <th className={css(styles.leadingCell)}>+ margin</th>
+            <td className={css(styles.trailingCell)}>
               <input
                 type="number"
+                className={css(styles.textInput)}
                 name="pageMargin"
                 value={pageMargin}
                 min={0}
                 max={Math.min(parseFloat(pageWidth), parseFloat(pageHeight)) / 3}
                 step={metric ? 1 : 1/8}
                 onChange={onGeneralChange}
-                style={{ width: '7ch' }}
               />
             </td>
           </tr>
@@ -225,7 +253,7 @@ export default function({
           </tr>
 
           <tr>
-            <td style={{ textAlign: 'right' }}>
+            <th className={css(styles.leadingCell)}>
               <input
                 type="checkbox"
                 id="metric-checkbox"
@@ -233,8 +261,8 @@ export default function({
                 checked={metric}
                 onChange={onMetricChange}
               />
-            </td>
-            <td>
+            </th>
+            <td className={css(styles.trailingCell)}>
               <label htmlFor="metric-checkbox">Metric</label>
             </td>
           </tr>
@@ -243,10 +271,16 @@ export default function({
 
       <hr />
 
-      <div style={{ textAlign: 'center' }}>
+      <section>
         <SvgSaveButton
           svgId={layoutSvgId}
-          filename={`${frets}-frets-on-${firstScaleLength + (multiscale ? `-through-${secondScaleLength}` : '')}${metric ? 'mm' : 'in'}-scale.svg`}
+          filename={[
+            `${frets}-frets-on-`,
+            firstScaleLength,
+            multiscale ? `-through-${secondScaleLength}` : '',
+            metric ? 'mm' : 'in',
+            `-scale.svg`
+          ].join('')}
         >
           Save
         </SvgSaveButton>
@@ -257,7 +291,7 @@ export default function({
         >
           Print
         </button>
-      </div>
-    </React.Fragment>
+      </section>
+    </div>
   );
 }

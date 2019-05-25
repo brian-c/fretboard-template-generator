@@ -1,6 +1,15 @@
 import React from 'react';
 import Fretboard, { getFretPosition } from './fretboard';
 import RegistrationMark from './registration-mark';
+import { StyleSheet, css } from 'aphrodite';
+
+const styles = StyleSheet.create({
+  columnRect: {
+    fill: 'none',
+    stroke: 'black',
+    strokeWidth: '0.5pt',
+  },
+});
 
 function getColumnsCount(availableHeight, contentHeight, overlap) {
   const columnsForContent = Math.ceil(contentHeight / availableHeight);
@@ -13,7 +22,7 @@ function getColumnsCount(availableHeight, contentHeight, overlap) {
   }
 }
 
-export default function({
+export default function Layout({
   id,
   width,
   height,
@@ -64,9 +73,9 @@ export default function({
           x="50%"
           y="50%"
           textAnchor="middle"
-          >
-            Invalid input
-          </text>
+        >
+          Invalid input
+        </text>
       ) : Array(columnsCount).fill(null).map((_, c) => {
         const x = columnWidth * c;
 
@@ -79,13 +88,11 @@ export default function({
               height={`${height}${unit}`}
             >
               <rect
+                className={css(styles.columnRect)}
                 x={0}
                 y={0}
                 width={`${columnWidth}${unit}`}
                 height={`${height}${unit}`}
-                fill="none"
-                stroke="black"
-                strokeWidth="0.5pt"
               />
 
               <use
