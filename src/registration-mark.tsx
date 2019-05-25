@@ -15,7 +15,7 @@ export default function RegistrationMark({
 }: {
   size: number;
   unit: string;
-}): React.ReactElement {
+} & SVGGElement): React.ReactElement {
   return (
     <g className={css(styles.registrationMark)}>
       <circle

@@ -10,7 +10,7 @@ export default function SvgSaveButton({
   svgId: string;
   filename: string;
   children?: React.ReactFragment;
-}): React.ReactElement {
+} & HTMLButtonElement): React.ReactElement {
   function handleSaveButtonClick(): void {
     const svg = document.getElementById(svgId);
     const blob = new Blob([svgPrefix, svg.outerHTML], {

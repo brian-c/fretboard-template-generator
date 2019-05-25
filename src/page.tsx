@@ -28,8 +28,10 @@ export default function Page({
   height: number;
   margin: number;
   unit: string;
-  style?: Object;
-  children?: React.ReactFragment;
+  scale: number;
+} & SVGSVGElement & {
+  // Not sure why this isn't included.
+  style: any;
 }): React.ReactElement {
   const ppu = PIXELS_PER[unit];
 

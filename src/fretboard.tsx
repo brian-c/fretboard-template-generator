@@ -56,7 +56,7 @@ export default function Fretboard({
   width: number;
   margin: number;
   unit: string;
-}): React.ReactElement {
+} & SVGElement): React.ReactElement {
   const height = getFretPosition(frets, Math.max(firstScaleLength, secondScaleLength)) + margin * 2;
   const scaleDifference = firstScaleLength - secondScaleLength;
 

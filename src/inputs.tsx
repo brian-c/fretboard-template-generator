@@ -61,7 +61,7 @@ export default function Inputs({
   metric: boolean;
   layoutSvgId: string;
   onChange: Function;
-}): React.ReactElement {
+} & HTMLDivElement): React.ReactElement {
   function setMetric(value: boolean): void {
     const multiplier: number = value ? MM_PER_INCH : 1 / MM_PER_INCH;
 

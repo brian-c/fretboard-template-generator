@@ -37,7 +37,6 @@ export default function Layout({
   overlap,
   unit,
 }: {
-  id?: string;
   width: number;
   height: number;
   frets: number;
@@ -46,7 +45,7 @@ export default function Layout({
   perpendicularAt: number;
   overlap: number;
   unit: string;
-}): React.ReactElement {
+} & SVGSVGElement): React.ReactElement {
   const fretboardHeight: number = getFretPosition(frets, Math.max(firstScaleLength, secondScaleLength)) + overlap * 2;
   const columnsCount: number = getColumnsCount(height, fretboardHeight, overlap);
   const columnWidth: number = width / columnsCount;
