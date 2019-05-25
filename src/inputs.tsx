@@ -1,9 +1,9 @@
-import React from 'react';
+import * as React from 'react';
 import SvgSaveButton from './svg-save-button';
 import { inputPresets } from './presets';
 import { StyleSheet, css } from 'aphrodite';
 
-const MM_PER_INCH = 25.4;
+const MM_PER_INCH: number = 25.4;
 
 const styles = StyleSheet.create({
   container: {
@@ -17,7 +17,7 @@ const styles = StyleSheet.create({
   },
 
   trailingCell: {
-    textAlign: 'start'
+    textAlign: 'start',
   },
 
   textInput: {
@@ -33,7 +33,7 @@ const styles = StyleSheet.create({
   },
 });
 
-function stringifyNumber(number) {
+function stringifyNumber(number: number): string {
   return parseFloat(number.toFixed(3)).toString();
 }
 
@@ -49,9 +49,21 @@ export default function Inputs({
   metric,
   layoutSvgId,
   onChange,
-}) {
-  function setMetric(value) {
-    const multiplier = value ? MM_PER_INCH : 1 / MM_PER_INCH;
+}: {
+  firstScaleLength: string;
+  multiscale: boolean;
+  secondScaleLength: string;
+  perpendicularAt: string;
+  frets: string;
+  pageWidth: string;
+  pageHeight: string;
+  pageMargin: string;
+  metric: boolean;
+  layoutSvgId: string;
+  onChange: Function;
+}): React.ReactElement {
+  function setMetric(value: boolean): void {
+    const multiplier: number = value ? MM_PER_INCH : 1 / MM_PER_INCH;
 
     onChange({
       firstScaleLength: stringifyNumber(parseFloat(firstScaleLength) * multiplier),
@@ -63,19 +75,19 @@ export default function Inputs({
     });
   }
 
-  function onGeneralChange(event) {
-    const valueProperty = event.currentTarget.type === 'checkbox' ? 'checked' : 'value';
+  function onGeneralChange(event: React.ChangeEvent<HTMLInputElement>): void {
+    const valueProperty: string = event.currentTarget.type === 'checkbox' ? 'checked' : 'value';
     onChange({
       [event.currentTarget.name]: event.currentTarget[valueProperty],
     });
   }
 
-  function onMetricChange(event) {
+  function onMetricChange(event: React.ChangeEvent<HTMLInputElement>): void {
     setMetric(event.currentTarget.checked);
   }
 
-  function onTemplateSelection(event) {
-    const value = parseFloat(event.currentTarget.value);
+  function onTemplateSelection(event: React.ChangeEvent<HTMLSelectElement>) {
+    const value: number = parseFloat(event.currentTarget.value);
     onChange({
       firstScaleLength: stringifyNumber(metric ? value * MM_PER_INCH : value),
       multiscale: false,

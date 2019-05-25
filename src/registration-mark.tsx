@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { StyleSheet, css } from 'aphrodite';
 
 const styles = StyleSheet.create({
@@ -9,7 +9,13 @@ const styles = StyleSheet.create({
   },
 });
 
-export default function RegistrationMark({ size, unit }) {
+export default function RegistrationMark({
+  size,
+  unit
+}: {
+  size: number;
+  unit: string;
+}): React.ReactElement {
   return (
     <g className={css(styles.registrationMark)}>
       <circle

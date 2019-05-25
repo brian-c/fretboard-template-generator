@@ -1,13 +1,17 @@
-import React from 'react';
+import * as React from 'react';
 
-const svgPrefix = '<?xml version="1.0" encoding="UTF-8"?>\n';
+const svgPrefix: string = '<?xml version="1.0" encoding="UTF-8"?>\n';
 
 export default function SvgSaveButton({
   svgId,
   filename,
   children,
-}) {
-  function handleSaveButtonClick() {
+}: {
+  svgId: string;
+  filename: string;
+  children?: React.ReactFragment;
+}): React.ReactElement {
+  function handleSaveButtonClick(): void {
     const svg = document.getElementById(svgId);
     const blob = new Blob([svgPrefix, svg.outerHTML], {
       type: 'image/svg+xml;charset=utf-8'

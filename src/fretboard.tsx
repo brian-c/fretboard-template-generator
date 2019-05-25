@@ -47,8 +47,16 @@ export default function Fretboard({
   perpendicularAt,
   width,
   margin,
-  unit
-}) {
+  unit,
+} : {
+  frets: number;
+  firstScaleLength: number;
+  secondScaleLength: number;
+  perpendicularAt: number;
+  width: number;
+  margin: number;
+  unit: string;
+}): React.ReactElement {
   const height = getFretPosition(frets, Math.max(firstScaleLength, secondScaleLength)) + margin * 2;
   const scaleDifference = firstScaleLength - secondScaleLength;
 

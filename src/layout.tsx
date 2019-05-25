@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import Fretboard, { getFretPosition } from './fretboard';
 import RegistrationMark from './registration-mark';
 import { StyleSheet, css } from 'aphrodite';
@@ -11,7 +11,11 @@ const styles = StyleSheet.create({
   },
 });
 
-function getColumnsCount(availableHeight, contentHeight, overlap) {
+function getColumnsCount(
+  availableHeight: number,
+  contentHeight: number,
+  overlap: number
+): number {
   const columnsForContent = Math.ceil(contentHeight / availableHeight);
   const addedOverlap = overlap * (columnsForContent - 1);
   const leftoverSpace = availableHeight - contentHeight % availableHeight;
@@ -31,13 +35,21 @@ export default function Layout({
   secondScaleLength,
   perpendicularAt,
   overlap,
-  unit
-}) {
-  const fretboardHeight = getFretPosition(frets, Math.max(firstScaleLength, secondScaleLength)) + overlap * 2;
-
-  const columnsCount = getColumnsCount(height, fretboardHeight, overlap);
-
-  const columnWidth = width / columnsCount;
+  unit,
+}: {
+  id?: string;
+  width: number;
+  height: number;
+  frets: number;
+  firstScaleLength: number;
+  secondScaleLength: number;
+  perpendicularAt: number;
+  overlap: number;
+  unit: string;
+}): React.ReactElement {
+  const fretboardHeight: number = getFretPosition(frets, Math.max(firstScaleLength, secondScaleLength)) + overlap * 2;
+  const columnsCount: number = getColumnsCount(height, fretboardHeight, overlap);
+  const columnWidth: number = width / columnsCount;
 
   return (
     <svg

@@ -60,7 +60,7 @@ const styles = StyleSheet.create({
   }
 });
 
-export default function App() {
+export default function App(): React.ReactElement {
   const [state, setState]: [InputState, Function] = useLocalStorage('fretboard', defaultState);
   const [scale, setScale]: [number, Function] = useState(0.99);
 
@@ -69,7 +69,7 @@ export default function App() {
     return () => document.body.style.overflow = '';
   });
 
-  function handleScaleChange(event) {
+  function handleScaleChange(event: React.ChangeEvent<HTMLInputElement>): void {
     setScale(event.currentTarget.valueAsNumber);
   }
 
