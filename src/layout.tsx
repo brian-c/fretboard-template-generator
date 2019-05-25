@@ -26,6 +26,18 @@ function getColumnsCount(
   }
 }
 
+interface Props {
+  id: string;
+  width: number;
+  height: number;
+  frets: number;
+  firstScaleLength: number;
+  secondScaleLength: number;
+  perpendicularAt: number;
+  overlap: number;
+  unit: string;
+}
+
 export default function Layout({
   id,
   width,
@@ -36,16 +48,7 @@ export default function Layout({
   perpendicularAt,
   overlap,
   unit,
-}: {
-  width: number;
-  height: number;
-  frets: number;
-  firstScaleLength: number;
-  secondScaleLength: number;
-  perpendicularAt: number;
-  overlap: number;
-  unit: string;
-} & SVGSVGElement): React.ReactElement {
+}: Props) {
   const fretboardHeight: number = getFretPosition(frets, Math.max(firstScaleLength, secondScaleLength)) + overlap * 2;
   const columnsCount: number = getColumnsCount(height, fretboardHeight, overlap);
   const columnWidth: number = width / columnsCount;

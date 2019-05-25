@@ -16,23 +16,16 @@ const styles = StyleSheet.create({
   },
 });
 
-export default function Page({
-  width,
-  height,
-  margin,
-  unit,
-  style,
-  children,
-}: {
+interface Props {
   width: number;
   height: number;
   margin: number;
   unit: string;
-  scale: number;
-} & SVGSVGElement & {
-  // Not sure why this isn't included.
-  style: any;
-}): React.ReactElement {
+  style: Object;
+  children: React.ReactFragment;
+}
+
+export default function Page({ width, height, margin, unit, style, children }: Props) {
   const ppu = PIXELS_PER[unit];
 
   return (

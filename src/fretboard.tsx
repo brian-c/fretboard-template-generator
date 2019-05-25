@@ -40,6 +40,16 @@ export function getFretPosition(
   return scaleLength - scaleLength / (2 ** (fret / tones));
 }
 
+interface Props {
+  frets: number;
+  firstScaleLength: number;
+  secondScaleLength: number;
+  perpendicularAt: number;
+  width: number;
+  margin: number;
+  unit: string;
+}
+
 export default function Fretboard({
   frets,
   firstScaleLength,
@@ -48,15 +58,7 @@ export default function Fretboard({
   width,
   margin,
   unit,
-} : {
-  frets: number;
-  firstScaleLength: number;
-  secondScaleLength: number;
-  perpendicularAt: number;
-  width: number;
-  margin: number;
-  unit: string;
-} & SVGElement): React.ReactElement {
+}: Props) {
   const height = getFretPosition(frets, Math.max(firstScaleLength, secondScaleLength)) + margin * 2;
   const scaleDifference = firstScaleLength - secondScaleLength;
 

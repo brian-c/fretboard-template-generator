@@ -9,13 +9,12 @@ const styles = StyleSheet.create({
   },
 });
 
-export default function RegistrationMark({
-  size,
-  unit
-}: {
+interface Props {
   size: number;
   unit: string;
-} & SVGGElement): React.ReactElement {
+}
+
+export default function RegistrationMark({ size, unit }: Props) {
   return (
     <g className={css(styles.registrationMark)}>
       <circle

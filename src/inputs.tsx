@@ -37,6 +37,20 @@ function stringifyNumber(number: number): string {
   return parseFloat(number.toFixed(3)).toString();
 }
 
+interface Props {
+  firstScaleLength: string;
+  multiscale: boolean;
+  secondScaleLength: string;
+  perpendicularAt: string;
+  frets: string;
+  pageWidth: string;
+  pageHeight: string;
+  pageMargin: string;
+  metric: boolean;
+  layoutSvgId: string;
+  onChange: Function;
+}
+
 export default function Inputs({
   firstScaleLength,
   multiscale,
@@ -49,19 +63,7 @@ export default function Inputs({
   metric,
   layoutSvgId,
   onChange,
-}: {
-  firstScaleLength: string;
-  multiscale: boolean;
-  secondScaleLength: string;
-  perpendicularAt: string;
-  frets: string;
-  pageWidth: string;
-  pageHeight: string;
-  pageMargin: string;
-  metric: boolean;
-  layoutSvgId: string;
-  onChange: Function;
-} & HTMLDivElement): React.ReactElement {
+}: Props) {
   function setMetric(value: boolean): void {
     const multiplier: number = value ? MM_PER_INCH : 1 / MM_PER_INCH;
 

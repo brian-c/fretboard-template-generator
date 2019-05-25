@@ -37,7 +37,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
 
-  layoutWrapper: {
+  pageWrapper: {
     flexGrow: 1,
     overflow: 'auto',
     padding: '4vw 4vw 5vw',
@@ -60,7 +60,7 @@ const styles = StyleSheet.create({
   }
 });
 
-export default function App(): React.ReactElement {
+export default function App() {
   const [state, setState]: [InputState, Function] = useLocalStorage('fretboard', defaultState);
   const [scale, setScale]: [number, Function] = useState(0.99);
 
@@ -98,7 +98,7 @@ export default function App(): React.ReactElement {
         </section>
 
         <section className={css(styles.outputContainer)}>
-          <div className={css(styles.layoutWrapper)}>
+          <div className={css(styles.pageWrapper)}>
             <Page
               width={parseFloat(state.pageWidth)}
               height={parseFloat(state.pageHeight)}
@@ -124,18 +124,19 @@ export default function App(): React.ReactElement {
         </section>
       </main>
 
-      <Layout
-        id="app__fretboard-layout"
-        className={css(styles.printVersion)}
-        width={parseFloat(state.pageWidth) - parseFloat(state.pageMargin) * 2 || 2}
-        height={parseFloat(state.pageHeight) - parseFloat(state.pageMargin) * 2 || 2}
-        frets={parseFloat(state.frets) || 0}
-        firstScaleLength={parseFloat(state.firstScaleLength) || 0}
-        secondScaleLength={parseFloat(state.multiscale ? state.secondScaleLength : state.firstScaleLength) || 0}
-        perpendicularAt={parseFloat(state.perpendicularAt) || 0}
-        overlap={Math.min(state.metric ? 15 : 1/2, parseFloat(state.pageHeight) / 3)}
-        unit={state.metric ? 'mm' : 'in'}
-      />
+      <section className={css(styles.printVersion)}>
+        <Layout
+          id="app__fretboard-layout"
+          width={parseFloat(state.pageWidth) - parseFloat(state.pageMargin) * 2 || 2}
+          height={parseFloat(state.pageHeight) - parseFloat(state.pageMargin) * 2 || 2}
+          frets={parseFloat(state.frets) || 0}
+          firstScaleLength={parseFloat(state.firstScaleLength) || 0}
+          secondScaleLength={parseFloat(state.multiscale ? state.secondScaleLength : state.firstScaleLength) || 0}
+          perpendicularAt={parseFloat(state.perpendicularAt) || 0}
+          overlap={Math.min(state.metric ? 15 : 1/2, parseFloat(state.pageHeight) / 3)}
+          unit={state.metric ? 'mm' : 'in'}
+        />
+      </section>
     </React.Fragment>
   );
 }
