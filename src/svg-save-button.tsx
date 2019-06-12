@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-const svgPrefix: string = '<?xml version="1.0" encoding="UTF-8"?>\n';
+const SVG_PREFIX: string = '<?xml version="1.0" encoding="UTF-8"?>\n';
 
 interface Props {
   svgId: string;
@@ -9,11 +9,14 @@ interface Props {
 }
 
 export default function SvgSaveButton({ svgId, filename, children }: Props) {
+  // Build a `download` link to a blob and click it.
   function handleSaveButtonClick(): void {
     const svg = document.getElementById(svgId);
-    const blob = new Blob([svgPrefix, svg.outerHTML], {
+
+    const blob = new Blob([SVG_PREFIX, svg.outerHTML], {
       type: 'image/svg+xml;charset=utf-8'
     });
+
     const url = URL.createObjectURL(blob);
 
     const link = document.createElement('a');

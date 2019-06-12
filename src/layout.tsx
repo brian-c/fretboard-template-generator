@@ -4,6 +4,11 @@ import RegistrationMark from './registration-mark';
 
 // Keep styles inline so saving as SVG works.
 const styles = {
+  errorText: {
+    fontWeight: 'bold',
+    textAnchor: 'middle',
+  },
+
   columnRect: {
     fill: 'none',
     stroke: 'black',
@@ -53,6 +58,9 @@ export default function Layout({
   const columnsCount: number = getColumnsCount(height, fretboardHeight, overlap);
   const columnWidth: number = width / columnsCount;
 
+  // This is keeping the full fretboard as a symbol,
+  // then rendering it once per column (with vertical offset).
+
   return (
     <svg
       id={id}
@@ -84,9 +92,9 @@ export default function Layout({
 
       {columnsCount < 1 || columnsCount > 10 ? (
         <text
+          {...styles.errorText}
           x="50%"
           y="50%"
-          textAnchor="middle"
         >
           Invalid input
         </text>

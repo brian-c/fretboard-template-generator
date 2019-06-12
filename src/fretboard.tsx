@@ -1,5 +1,6 @@
 import * as React from 'react';
 
+// https://www.stewmac.com/Luthier_Tools/Types_of_Tools/Saws/Fret_Saw.html
 const FRET_TANG_WIDTH = '0.023in';
 
 // Keep styles inline so saving as SVG works.
@@ -37,6 +38,7 @@ export function getFretPosition(
   scaleLength: number,
   tones: number = 12
 ): number {
+  // https://en.wikipedia.org/wiki/Equal_temperament
   return scaleLength - scaleLength / (2 ** (fret / tones));
 }
 
@@ -79,6 +81,7 @@ export default function Fretboard({
         let y1 = margin + getFretPosition(f, firstScaleLength);
         let y2 = margin + getFretPosition(f, secondScaleLength);
 
+        // TODO: Make this a specific fret number, maybe?
         const makePerpendicular = Math.abs(scaleDifference) * perpendicularAt;
         if (scaleDifference < 0) {
           y1 += makePerpendicular;
