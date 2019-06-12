@@ -1,13 +1,13 @@
 import * as React from 'react';
-import { StyleSheet, css } from 'aphrodite';
 
-const styles = StyleSheet.create({
+// Keep styles inline so saving as SVG works.
+const styles = {
   registrationMark: {
     fill: 'none',
     stroke: 'black',
     strokeWidth: '0.5pt',
   },
-});
+};
 
 interface Props {
   size: number;
@@ -16,7 +16,7 @@ interface Props {
 
 export default function RegistrationMark({ size, unit }: Props) {
   return (
-    <g className={css(styles.registrationMark)}>
+    <g {...styles.registrationMark}>
       <circle
         cx={`${size / 2}${unit}`}
         cy={`${size / 2}${unit}`}

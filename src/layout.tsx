@@ -1,15 +1,15 @@
 import * as React from 'react';
 import Fretboard, { getFretPosition } from './fretboard';
 import RegistrationMark from './registration-mark';
-import { StyleSheet, css } from 'aphrodite';
 
-const styles = StyleSheet.create({
+// Keep styles inline so saving as SVG works.
+const styles = {
   columnRect: {
     fill: 'none',
     stroke: 'black',
     strokeWidth: '0.5pt',
   },
-});
+};
 
 function getColumnsCount(
   availableHeight: number,
@@ -102,7 +102,7 @@ export default function Layout({
               height={`${height}${unit}`}
             >
               <rect
-                className={css(styles.columnRect)}
+                {...styles.columnRect}
                 x={0}
                 y={0}
                 width={`${columnWidth}${unit}`}

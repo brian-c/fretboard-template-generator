@@ -1,9 +1,9 @@
 import * as React from 'react';
-import { StyleSheet, css } from 'aphrodite';
 
 const FRET_TANG_WIDTH = '0.023in';
 
-const styles = StyleSheet.create({
+// Keep styles inline so saving as SVG works.
+const styles = {
   centerLine: {
     stroke: 'gray',
     strokeWidth: '0.5pt',
@@ -30,7 +30,7 @@ const styles = StyleSheet.create({
   nut: {
     strokeDasharray: FRET_TANG_WIDTH,
   },
-});
+};
 
 export function getFretPosition(
   fret: number,
@@ -68,7 +68,7 @@ export default function Fretboard({
       height={`${height}${unit}`}
     >
       <line
-        className={css(styles.centerLine)}
+        {...styles.centerLine}
         x1={`${width / 2}${unit}`}
         y1={0}
         x2={`${width / 2}${unit}`}
@@ -91,7 +91,7 @@ export default function Fretboard({
         return (
           <React.Fragment key={f}>
             <circle
-              className={css(styles.fretLabelBackground)}
+              {...styles.fretLabelBackground}
               cx={`${width / 2}${unit}`}
               cy={`${yMidpoint}${unit}`}
               transform="translate(0, -4)"
@@ -99,7 +99,7 @@ export default function Fretboard({
             />
 
             <text
-              className={css(styles.fretLabel)}
+              {...styles.fretLabel}
               x={`${width / 2}${unit}`}
               y={`${yMidpoint}${unit}`}
               transform="translate(0, -3)"
@@ -116,7 +116,8 @@ export default function Fretboard({
             </text>
 
             <line
-              className={css(styles.fretLine, f === 0 && styles.nut)}
+              {...styles.fretLine}
+              {...(f === 0 ? styles.nut : {})}
               x1={0}
               y1={`${y1}${unit}`}
               x2={`${width}${unit}`}
