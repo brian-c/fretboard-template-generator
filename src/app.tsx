@@ -133,7 +133,7 @@ export default function App() {
           firstScaleLength={parseFloat(state.firstScaleLength) || 0}
           secondScaleLength={parseFloat(state.multiscale ? state.secondScaleLength : state.firstScaleLength) || 0}
           perpendicularAt={parseFloat(state.perpendicularAt) || 0}
-          overlap={Math.min(state.metric ? 15 : 1/2, parseFloat(state.pageHeight) / 3)}
+          overlap={Math.min(state.metric ? 12.7 : 1/2, parseFloat(state.pageHeight) / 3)}
           unit={state.metric ? 'mm' : 'in'}
         />
       </section>
