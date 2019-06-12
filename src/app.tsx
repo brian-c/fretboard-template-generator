@@ -24,6 +24,7 @@ const styles = StyleSheet.create({
   inputsContainer: {
     background: '#eee',
     borderRight: '1px solid #0004',
+    overflow: 'auto',
     padding: '1rem',
   },
 
@@ -62,12 +63,13 @@ const styles = StyleSheet.create({
 
 export default function App() {
   const [state, setState]: [InputState, Function] = useLocalStorage('fretboard', defaultState);
-  const [scale, setScale]: [number, Function] = useState(0.99);
+  const [scale, setScale]: [number, Function] = useLocalStorage('scale', 0.99);
 
   useEffect(() => {
+    // Scrolling is handled by the output area.
     document.body.style.overflow = 'hidden';
     return () => document.body.style.overflow = '';
-  });
+  }, []);
 
   function handleScaleChange(event: React.ChangeEvent<HTMLInputElement>): void {
     setScale(event.currentTarget.valueAsNumber);
