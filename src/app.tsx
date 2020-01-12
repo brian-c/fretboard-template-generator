@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import Inputs from './inputs';
 import Page from './page';
 import Layout from './layout';
@@ -63,13 +63,17 @@ const styles = StyleSheet.create({
 
 export default function App() {
   const [state, setState]: [InputState, Function] = useLocalStorage('fretboard', defaultState);
-  const [scale, setScale]: [number, Function] = useLocalStorage('scale', 0.99);
+  const [scale, setScale]: [number, Function] = useLocalStorage('scale', 1);
 
   useEffect(() => {
-    // Scrolling is handled by the output area.
+    // Scrolling is handled by the output container.
     document.body.style.overflow = 'hidden';
     return () => document.body.style.overflow = '';
   }, []);
+
+  function handleChanges(changes: object): void {
+    setState({ ...state, ...changes });
+  }
 
   function handleScaleChange(event: React.ChangeEvent<HTMLInputElement>): void {
     setScale(event.currentTarget.valueAsNumber);
@@ -90,12 +94,7 @@ export default function App() {
             pageMargin={state.pageMargin}
             metric={state.metric}
             layoutSvgId="app__fretboard-layout"
-            onChange={changes => {
-              setState({
-                ...state,
-                ...changes,
-              });
-            }}
+            onChange={handleChanges}
           />
         </section>
 
@@ -106,7 +105,7 @@ export default function App() {
               height={parseFloat(state.pageHeight)}
               margin={parseFloat(state.pageMargin)}
               unit={state.metric ? 'mm' : 'in'}
-              style={{ width: `${scale * 100}%` }}
+              style={{ width: `${scale * 99}%` }}
             >
               <use xlinkHref="#app__fretboard-layout" />
             </Page>
@@ -121,7 +120,12 @@ export default function App() {
               value={scale}
               title="Preview zoom"
               onChange={handleScaleChange}
+              list="app__scale-notches"
             />
+
+            <datalist id="app__scale-notches">
+              <option value="1"></option>
+            </datalist>
           </div>
         </section>
       </main>

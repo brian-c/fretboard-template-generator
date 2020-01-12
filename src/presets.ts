@@ -22,7 +22,7 @@ export const defaultState: InputState = {
   pageMargin: `${1/2}`,
 };
 
-export const inputPresets: Map<string, number> = new Map([
+export const scaleLengthPresets: Map<string, number> = new Map([
   ['Guitar (Fender standard scale)', 25+1/2],
   ['Guitar (Fender short scale)', 24],
   ['Guitar (Gibson scale)', 24+3/4],

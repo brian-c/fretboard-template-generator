@@ -1,6 +1,5 @@
 import * as React from 'react';
-
-const SVG_PREFIX: string = '<?xml version="1.0" encoding="UTF-8"?>\n';
+import { SVG_PREFIX } from './constants';
 
 interface Props {
   svgId: string;
@@ -8,9 +7,13 @@ interface Props {
   children: React.ReactFragment;
 }
 
-export default function SvgSaveButton({ svgId, filename, children }: Props) {
+export default function SvgSaveButton({
+  svgId,
+  filename,
+  children
+}: Props) {
   // Build a `download` link to a blob and click it.
-  function handleSaveButtonClick(): void {
+  function handleClick(): void {
     const svg = document.getElementById(svgId);
 
     const blob = new Blob([SVG_PREFIX, svg.outerHTML], {
@@ -30,10 +33,7 @@ export default function SvgSaveButton({ svgId, filename, children }: Props) {
   }
 
   return (
-    <button
-      type="button"
-      onClick={handleSaveButtonClick}
-    >
+    <button type="button" onClick={handleClick}>
       {children}
     </button>
   );

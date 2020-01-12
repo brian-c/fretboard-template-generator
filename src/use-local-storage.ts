@@ -4,7 +4,7 @@ function read(key: string): any {
   try {
     return JSON.parse(localStorage.getItem(key));
   } catch (error) {
-    // No worries, we'll use the defaults.
+    // We'll use the defaults.
   }
 }
 
@@ -12,7 +12,7 @@ function write(key: string, value: any): void {
   try {
     localStorage.setItem(key, JSON.stringify(value));
   } catch (error) {
-    // No sweat, we just won't save things for next time.
+    // We just won't save things for next time.
   }
 }
 

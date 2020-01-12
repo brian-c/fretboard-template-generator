@@ -1,12 +1,6 @@
 import * as React from 'react';
 import { StyleSheet, css } from 'aphrodite';
-
-const PIXELS_PER: {
-  [key: string]: number
-} = {
-  in: 96,
-  mm: 96 / 25.4,
-};
+import { PIXELS_PER_INCH, PIXELS_PER_MM } from './constants';
 
 const styles = StyleSheet.create({
   page: {
@@ -26,7 +20,7 @@ interface Props {
 }
 
 export default function Page({ width, height, margin, unit, style, children }: Props) {
-  const ppu = PIXELS_PER[unit];
+  const ppu = { in: PIXELS_PER_INCH, mm: PIXELS_PER_MM }[unit];
 
   return (
     <svg

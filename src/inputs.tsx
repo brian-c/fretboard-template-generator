@@ -1,9 +1,8 @@
 import * as React from 'react';
 import SvgSaveButton from './svg-save-button';
-import { inputPresets } from './presets';
+import { scaleLengthPresets } from './presets';
 import { StyleSheet, css } from 'aphrodite';
-
-const MM_PER_INCH: number = 25.4;
+import { MM_PER_INCH } from './constants';
 
 const styles = StyleSheet.create({
   container: {
@@ -77,18 +76,18 @@ export default function Inputs({
     });
   }
 
-  function onGeneralChange(event: React.ChangeEvent<HTMLInputElement>): void {
+  function handleMiscChange(event: React.ChangeEvent<HTMLInputElement>): void {
     const valueProperty: string = event.currentTarget.type === 'checkbox' ? 'checked' : 'value';
     onChange({
       [event.currentTarget.name]: event.currentTarget[valueProperty],
     });
   }
 
-  function onMetricChange(event: React.ChangeEvent<HTMLInputElement>): void {
+  function handleMetricChange(event: React.ChangeEvent<HTMLInputElement>): void {
     setMetric(event.currentTarget.checked);
   }
 
-  function onTemplateSelection(event: React.ChangeEvent<HTMLSelectElement>) {
+  function handleTemplateSelection(event: React.ChangeEvent<HTMLSelectElement>) {
     const value: number = parseFloat(event.currentTarget.value);
     onChange({
       firstScaleLength: stringifyNumber(metric ? value * MM_PER_INCH : value),
@@ -115,21 +114,21 @@ export default function Inputs({
                 name="firstScaleLength"
                 value={firstScaleLength}
                 step={metric ? 1 : 1/8}
-                onChange={onGeneralChange}
+                onChange={handleMiscChange}
               />
 
               <select
                 className={css(styles.presetsMenu)}
                 aria-label="Presets"
                 value=""
-                onChange={onTemplateSelection}
+                onChange={handleTemplateSelection}
               >
                 <option
                   value=""
                   disabled
                 ></option>
 
-                {Array.from(inputPresets.entries()).map(([name, value]) => (
+                {Array.from(scaleLengthPresets.entries()).map(([name, value]) => (
                   <option
                     key={name}
                     value={value}
@@ -148,7 +147,7 @@ export default function Inputs({
                 id="multiscale-checkbox"
                 name="multiscale"
                 checked={multiscale}
-                onChange={onGeneralChange}
+                onChange={handleMiscChange}
               />
             </th>
             <td className={css(styles.trailingCell)}>
@@ -167,7 +166,7 @@ export default function Inputs({
                     name="secondScaleLength"
                     value={secondScaleLength}
                     step={metric ? 1 : 1/8}
-                    onChange={onGeneralChange}
+                    onChange={handleMiscChange}
                   />
                 </td>
               </tr>
@@ -181,7 +180,7 @@ export default function Inputs({
                     name="perpendicularAt"
                     value={perpendicularAt}
                     step={1/10}
-                    onChange={onGeneralChange}
+                    onChange={handleMiscChange}
                   />
                 </td>
               </tr>
@@ -203,7 +202,7 @@ export default function Inputs({
                 name="frets"
                 value={frets}
                 step={1}
-                onChange={onGeneralChange}
+                onChange={handleMiscChange}
               />
             </td>
           </tr>
@@ -224,7 +223,7 @@ export default function Inputs({
                 value={pageWidth}
                 min={1}
                 step={metric ? 1 : 1/8}
-                onChange={onGeneralChange}
+                onChange={handleMiscChange}
               />
             </td>
           </tr>
@@ -239,7 +238,7 @@ export default function Inputs({
                 value={pageHeight}
                 min={1}
                 step={metric ? 1 : 1/8}
-                onChange={onGeneralChange}
+                onChange={handleMiscChange}
               />
             </td>
           </tr>
@@ -255,7 +254,7 @@ export default function Inputs({
                 min={0}
                 max={Math.min(parseFloat(pageWidth), parseFloat(pageHeight)) / 3}
                 step={metric ? 1 : 1/8}
-                onChange={onGeneralChange}
+                onChange={handleMiscChange}
               />
             </td>
           </tr>
@@ -273,7 +272,7 @@ export default function Inputs({
                 id="metric-checkbox"
                 name="metric"
                 checked={metric}
-                onChange={onMetricChange}
+                onChange={handleMetricChange}
               />
             </th>
             <td className={css(styles.trailingCell)}>
