@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { FRET_TANG_WIDTH } from './constants';
+import formatInches from './format-inches';
 
 // NOTE: Keep styles inline so saving as SVG works.
 const styles = {
@@ -62,6 +63,9 @@ export default function Fretboard({
   const height = getFretPosition(frets, Math.max(firstScaleLength, secondScaleLength)) + margin * 2;
   const scaleDifference = firstScaleLength - secondScaleLength;
 
+  const formattedFirstLength = unit === 'in' ? formatInches(firstScaleLength) : firstScaleLength;
+  const formattedSecondLength = unit === 'in' ? formatInches(secondScaleLength) : secondScaleLength;
+
   return (
     <svg
       width={`${width}${unit}`}
@@ -107,9 +111,9 @@ export default function Fretboard({
             >
               {f === 0 ? (
                 firstScaleLength === secondScaleLength ? (
-                  `${firstScaleLength}${unit}`
+                  `${formattedFirstLength}${unit}`
                 ) : (
-                  `${firstScaleLength}-${secondScaleLength}${unit}`
+                  `${formattedFirstLength}-${formattedSecondLength}${unit}`
                 )
               ) : (
                 `${f}`
