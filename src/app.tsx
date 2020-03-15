@@ -33,7 +33,7 @@ const styles = StyleSheet.create({
     boxShadow: '0 0.5em 1em -0.5em #0004 inset',
     display: 'flex',
     flexDirection: 'column',
-    flexGrow: 1,
+    flex: '1 1',
     position: 'relative',
     textAlign: 'center',
   },

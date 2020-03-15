@@ -126,7 +126,7 @@ export default function Inputs({
                 <option
                   value=""
                   disabled
-                ></option>
+                >Presets</option>
 
                 {Array.from(scaleLengthPresets.entries()).map(([name, value]) => (
                   <option
