@@ -128,6 +128,13 @@ export default function Fretboard({
               x2={`${width}${unit}`}
               y2={`${y2}${unit}`}
             />
+
+            <circle
+              {...styles.fretLabelBackground}
+              cx={`${width / 2}${unit}`}
+              cy={`${(y1 + y2) / 2}${unit}`}
+              r={`${parseFloat(FRET_TANG_WIDTH) / 2}${FRET_TANG_WIDTH.match(/[A-z]+/)[0]}`}
+            />
           </React.Fragment>
         );
       })}
