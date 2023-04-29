@@ -11,6 +11,7 @@ const styles = {
 
   fretLabelBackground: {
     fill: 'white',
+    r: '8pt',
   },
 
   fretLabel: {
@@ -25,10 +26,6 @@ const styles = {
   fretLine: {
     stroke: 'black',
     strokeWidth: FRET_TANG_WIDTH,
-  },
-
-  nut: {
-    strokeDasharray: FRET_TANG_WIDTH,
   },
 };
 
@@ -47,7 +44,6 @@ interface Props {
   secondScaleLength: number;
   perpendicularAt: number;
   width: number;
-  margin: number;
   unit: string;
 }
 
@@ -57,14 +53,16 @@ export default function Fretboard({
   secondScaleLength,
   perpendicularAt,
   width,
-  margin,
   unit,
 }: Props) {
-  const height = getFretPosition(frets, Math.max(firstScaleLength, secondScaleLength)) + margin * 2;
+  const height = getFretPosition(frets + 0.5, Math.max(firstScaleLength, secondScaleLength));
   const scaleDifference = firstScaleLength - secondScaleLength;
 
   const formattedFirstLength = unit === 'in' ? formatInches(firstScaleLength) : firstScaleLength;
   const formattedSecondLength = unit === 'in' ? formatInches(secondScaleLength) : secondScaleLength;
+  const scaleDescription = firstScaleLength === secondScaleLength
+    ? `${formattedFirstLength} ${unit}`
+    : `${formattedFirstLength}–${formattedSecondLength} ${unit}`;
 
   return (
     <svg
@@ -79,9 +77,28 @@ export default function Fretboard({
         y2={`${height}${unit}`}
       />
 
+      <circle
+        {...styles.fretLabelBackground}
+        cx={`${width / 2}${unit}`}
+        cy={`${getFretPosition(0.5, (firstScaleLength + secondScaleLength) / 2)}${unit}`}
+        transform="translate(0, -4)"
+      />
+
+      <text
+        {...styles.fretLabel}
+        x={`${width / 2}${unit}`}
+        y={`${getFretPosition(0.5, (firstScaleLength + secondScaleLength) / 2)}${unit}`}
+        transform="translate(0, -3)"
+      >
+        {scaleDescription}
+      </text>
+
+
       {Array(frets + 1).fill(null).map((_, f) => {
-        let y1 = margin + getFretPosition(f, firstScaleLength);
-        let y2 = margin + getFretPosition(f, secondScaleLength);
+        if (f === 0) return null;
+
+        let y1 = getFretPosition(f, firstScaleLength);
+        let y2 = getFretPosition(f, secondScaleLength);
 
         // TODO: Make this a specific fret number.
         const makePerpendicular = Math.abs(scaleDifference) * perpendicularAt;
@@ -100,29 +117,10 @@ export default function Fretboard({
               cx={`${width / 2}${unit}`}
               cy={`${yMidpoint}${unit}`}
               transform="translate(0, -4)"
-              r='8pt'
             />
-
-            <text
-              {...styles.fretLabel}
-              x={`${width / 2}${unit}`}
-              y={`${yMidpoint}${unit}`}
-              transform="translate(0, -3)"
-            >
-              {f === 0 ? (
-                firstScaleLength === secondScaleLength ? (
-                  `${formattedFirstLength}${unit}`
-                ) : (
-                  `${formattedFirstLength}-${formattedSecondLength}${unit}`
-                )
-              ) : (
-                `${f}`
-              )}
-            </text>
 
             <line
               {...styles.fretLine}
-              {...(f === 0 ? styles.nut : {})}
               x1={0}
               y1={`${y1}${unit}`}
               x2={`${width}${unit}`}
@@ -135,6 +133,18 @@ export default function Fretboard({
               cy={`${(y1 + y2) / 2}${unit}`}
               r={`${parseFloat(FRET_TANG_WIDTH) / 2}${FRET_TANG_WIDTH.match(/[A-z]+/)[0]}`}
             />
+
+
+            <text
+              {...styles.fretLabel}
+              x={`${width / 2}${unit}`}
+              y={`${yMidpoint}${unit}`}
+              transform="translate(0, -3)"
+            >
+              {f !== 0 && (
+                `${f}`
+              )}
+            </text>
           </React.Fragment>
         );
       })}
