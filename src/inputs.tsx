@@ -140,7 +140,7 @@ export default function Inputs({
             </td>
           </tr>
 
-          <tr>
+          {/* <tr>
             <th className={css(styles.leadingCell)}>
               <input
                 type="checkbox"
@@ -153,7 +153,7 @@ export default function Inputs({
             <td className={css(styles.trailingCell)}>
               <label htmlFor="multiscale-checkbox">Multiscale</label>
             </td>
-          </tr>
+          </tr> */}
 
           {multiscale && (
             <React.Fragment>
