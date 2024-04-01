@@ -9,6 +9,7 @@ import { StyleSheet, css } from 'aphrodite';
 
 const styles = StyleSheet.create({
   app: {
+    background: '#eee',
     bottom: 0,
     display: 'flex',
     font: 'normal 1rem sans-serif',
@@ -18,19 +19,16 @@ const styles = StyleSheet.create({
     top: 0,
     '@media print': {
       display: 'none',
-    }
+    },
   },
 
   inputsContainer: {
-    background: '#eee',
-    borderRight: '1px solid #0004',
+    borderRight: '1px solid #0003',
     overflow: 'auto',
     padding: '1rem',
   },
 
   outputContainer: {
-    background: '#ccc',
-    boxShadow: '0 0.5em 1em -0.5em #0004 inset',
     display: 'flex',
     flexDirection: 'column',
     flex: '1 1',
@@ -45,7 +43,7 @@ const styles = StyleSheet.create({
   },
 
   scaleControlWrapper: {
-    background: '#0006',
+    background: 'white',
     borderRadius: '2rem',
     bottom: '1rem',
     padding: '0.2rem 1rem',
@@ -105,7 +103,7 @@ export default function App() {
               height={parseFloat(state.pageHeight)}
               margin={parseFloat(state.pageMargin)}
               unit={state.metric ? 'mm' : 'in'}
-              style={{ width: `${scale * 99}%` }}
+              style={{ height: `${scale * 99}%` }}
             >
               <use xlinkHref="#app__fretboard-layout" />
             </Page>

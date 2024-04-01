@@ -30,6 +30,11 @@ const styles = StyleSheet.create({
   presetsMenu: {
     width: '2.3ch',
   },
+
+  hr: {
+    border: '0 solid #8888',
+    borderTopWidth: '1px',
+  },
 });
 
 function stringifyNumber(number: number): string {
@@ -101,7 +106,7 @@ export default function Inputs({
         <strong>Fretboard template generator</strong>
       </header>
 
-      <hr />
+      <hr className={css(styles.hr)} />
 
       <table style={{ width: '100%' }}>
         <tbody>
@@ -116,7 +121,7 @@ export default function Inputs({
                 step={metric ? 1 : 1/8}
                 onChange={handleMiscChange}
               />
-
+              {' '}
               <select
                 className={css(styles.presetsMenu)}
                 aria-label="Presets"
@@ -189,7 +194,7 @@ export default function Inputs({
 
           <tr>
             <td colSpan={2}>
-              <hr />
+              <hr className={css(styles.hr)} />
             </td>
           </tr>
 
@@ -209,7 +214,7 @@ export default function Inputs({
 
           <tr>
             <td colSpan={2}>
-              <hr />
+              <hr className={css(styles.hr)} />
             </td>
           </tr>
 
@@ -261,7 +266,7 @@ export default function Inputs({
 
           <tr>
             <td colSpan={2}>
-              <hr />
+              <hr className={css(styles.hr)} />
             </td>
           </tr>
 
@@ -282,7 +287,7 @@ export default function Inputs({
         </tbody>
       </table>
 
-      <hr />
+      <hr className={css(styles.hr)} />
 
       <section>
         <SvgSaveButton

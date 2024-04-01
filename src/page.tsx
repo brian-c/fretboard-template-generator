@@ -5,8 +5,9 @@ import { PIXELS_PER_INCH, PIXELS_PER_MM } from './constants';
 const styles = StyleSheet.create({
   page: {
     background: 'white',
-    border: '1px solid gray',
-    boxShadow: '0 0.5em 1em -0.5em #0006',
+    border: '0',
+    borderRadius: '3px',
+    boxShadow: '0 1em 2em -1em #0006',
   },
 });
 

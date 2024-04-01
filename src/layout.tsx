@@ -77,7 +77,6 @@ export default function Layout({
             firstScaleLength={firstScaleLength}
             secondScaleLength={secondScaleLength}
             perpendicularAt={perpendicularAt}
-            margin={overlap}
             unit={unit}
           />
         </symbol>

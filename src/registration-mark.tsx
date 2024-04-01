@@ -19,6 +19,7 @@ export default function RegistrationMark({ size, unit }: Props) {
     <g {...styles.registrationMark}>
       {Array(5).fill(null).map((n, i, a) => (
         <circle
+          key={i}
           cx={`${size / 2}${unit}`}
           cy={`${size / 2}${unit}`}
           r={`${(size - size / a.length * i) / 2.1}${unit}`}
